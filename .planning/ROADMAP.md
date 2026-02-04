@@ -29,10 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Build produces ESM and CommonJS bundles with tree-shakeable exports
   4. Project has zero runtime dependencies verified by package.json
   5. Position offset tracking architecture documented and ready for implementation
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] TBD (filled during planning)
+- [ ] 01-01-PLAN.md — Package and TypeScript configuration with strict mode and conditional exports
+- [ ] 01-02-PLAN.md — Build tooling (tsdown, Biome, Vitest) with dual ESM/CJS output
+- [ ] 01-03-PLAN.md — Type system (Span, Citation unions) and architecture documentation
 
 ### Phase 2: Core Parsing
 **Goal**: Implement core citation detection, tokenization, metadata extraction, and text cleaning with ReDoS protection
@@ -87,7 +89,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Architecture | 0/TBD | Not started | - |
+| 1. Foundation & Architecture | 0/3 | Not started | - |
 | 2. Core Parsing | 0/TBD | Not started | - |
 | 3. Reporter Database & Annotation | 0/TBD | Not started | - |
 | 4. Short-Form Resolution & Integration | 0/TBD | Not started | - |
