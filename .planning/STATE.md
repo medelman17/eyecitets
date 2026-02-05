@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2025-02-04)
 
 ## Current Position
 
-Phase: 2 of 4 (Core Parsing)
-Plan: 6 of 6 complete
-Status: Phase complete ✅
-Last activity: 2026-02-05 — Completed 02-06-PLAN.md (main extraction pipeline with integration tests)
+Phase: 3 of 4 (Reporter Database & Annotation)
+Plan: 2 of 3 complete
+Status: In progress
+Last activity: 2026-02-05 — Completed 03-02-PLAN.md (citation annotation API with dual-mode support)
 
-Progress: [█████░░░░░] 58%
+Progress: [██████░░░░] 64%
 
 ## Phase 1 Plans (Complete)
 
@@ -35,12 +35,20 @@ Progress: [█████░░░░░] 58%
 | 02-05 | 3 | Citation extraction and metadata parsing | Complete ✅ |
 | 02-06 | 3 | Main extraction pipeline with integration tests | Complete ✅ |
 
+## Phase 3 Plans (In Progress)
+
+| Plan | Wave | Description | Status |
+|------|------|-------------|--------|
+| 03-01 | 1 | Reporter database loading and lookup | Complete ✅ |
+| 03-02 | 1 | Citation annotation API with dual-mode support | Complete ✅ |
+| 03-03 | 1 | TBD | Not started |
+
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 165s
-- Total execution time: 0.37 hours
+- Total plans completed: 10
+- Average duration: 156s
+- Total execution time: 0.43 hours
 
 **By Phase:**
 
@@ -48,10 +56,11 @@ Progress: [█████░░░░░] 58%
 |-------|-------|-------|----------|
 | Phase 1 | 3/3 | 4 min | 80s |
 | Phase 2 | 6/6 | 23.3 min | 233s |
+| Phase 3 | 2/3 | 5.8 min | 174s |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (306s), 02-02 (214s), 02-03 (167s), 02-05 (308s), 02-06 (296s)
-- Trend: Phase 2 plans averaging ~258s (complex implementation with comprehensive tests)
+- Last 5 plans: 02-03 (167s), 02-05 (308s), 02-06 (296s), 03-01 (165s), 03-02 (164s)
+- Trend: Phase 3 plans averaging ~165s (simpler implementation with focused tests)
 
 *Updated after each plan completion*
 
@@ -138,6 +147,15 @@ Recent decisions affecting current work:
 | PIPE-03 | Warnings from cleaning layer attached to all citations | Preserves diagnostic context through pipeline layers |
 | TEST-01 | Integration tests focus on MVP capabilities | Tests validate core metadata; parenthetical parsing deferred to Phase 3 pattern enhancements |
 
+**From 03-02 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| ANN-01 | Auto-escape defaults to true for XSS protection | Prevents injection attacks by default; developers must explicitly opt-out (safer than opt-in) |
+| ANN-02 | Process citations in reverse order | Avoids position shift invalidation when inserting markup |
+| ANN-03 | Support both callback and template modes | Flexibility for simple cases (template) and complex logic (callback) |
+| ANN-04 | Position map tracks original→new positions | Enables external systems to sync indices after annotation |
+
 ### Pending Todos
 
 None yet.
@@ -158,6 +176,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (02-06 execution)
-Stopped at: Completed 02-06-PLAN.md - Main extraction pipeline with integration tests (Phase 2 complete ✅)
+Last session: 2026-02-05 (03-02 execution)
+Stopped at: Completed 03-02-PLAN.md - Citation annotation API with dual-mode support (Phase 3: 2/3 plans complete)
 Resume file: None
