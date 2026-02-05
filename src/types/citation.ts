@@ -137,6 +137,27 @@ export interface FullCaseCitation extends CitationBase {
   defendant?: string
 
   /**
+   * Normalized plaintiff name for matching (lowercase, stripped of noise).
+   * Populated by Phase 7 (Party Name extraction).
+   * @example "smith" from "The Smith Corp., Inc."
+   */
+  plaintiffNormalized?: string
+
+  /**
+   * Normalized defendant name for matching (lowercase, stripped of noise).
+   * Populated by Phase 7 (Party Name extraction).
+   * @example "doe" from "Doe et al."
+   */
+  defendantNormalized?: string
+
+  /**
+   * Procedural prefix for non-adversarial cases.
+   * Populated by Phase 7 (Party Name extraction).
+   * @example "In re" from "In re Smith"
+   */
+  proceduralPrefix?: string
+
+  /**
    * True when page position contains a blank placeholder ("___" or "---").
    * Populated by Phase 5 (Blank Page support).
    * When true, page field will be undefined and confidence reduced to 0.8.

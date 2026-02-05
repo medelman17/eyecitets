@@ -231,6 +231,142 @@ function parseParenthetical(content: string): {
 }
 
 /**
+ * Normalize party name for matching by removing legal noise.
+ * Normalization pipeline:
+ * 1. Strip "et al." (case-insensitive)
+ * 2. Strip "d/b/a" (case-insensitive)
+ * 3. Strip "aka" (case-insensitive, word boundary)
+ * 4. Strip trailing corporate suffixes (Inc., LLC, Corp., Ltd., Co., LLP, LP, P.C.)
+ * 5. Strip leading articles (The, A, An)
+ * 6. Normalize whitespace
+ * 7. Trim and lowercase
+ *
+ * @param name - Raw party name
+ * @returns Normalized party name
+ *
+ * @example
+ * ```typescript
+ * normalizePartyName("The Smith Corp., Inc.") // "smith"
+ * normalizePartyName("Doe et al.") // "doe"
+ * normalizePartyName("United States") // "united states" (not stripped)
+ * ```
+ */
+function normalizePartyName(name: string): string {
+	let normalized = name
+
+	// Strip "et al." (with or without period, case-insensitive)
+	normalized = normalized.replace(/\bet\s+al\.?/gi, '')
+
+	// Strip "d/b/a" (case-insensitive)
+	normalized = normalized.replace(/\bd\/b\/a\b/gi, '')
+
+	// Strip "aka" (case-insensitive, word boundary)
+	normalized = normalized.replace(/\baka\b/gi, '')
+
+	// Strip trailing corporate suffixes (with or without trailing period)
+	normalized = normalized.replace(/,?\s*(Inc|LLC|Corp|Ltd|Co|LLP|LP|P\.C)\.?\s*$/gi, '')
+
+	// Strip leading articles (only at start)
+	normalized = normalized.replace(/^(The|A|An)\s+/i, '')
+
+	// Normalize whitespace (collapse multiple spaces)
+	normalized = normalized.replace(/\s+/g, ' ')
+
+	// Trim and lowercase
+	return normalized.trim().toLowerCase()
+}
+
+/**
+ * Extract plaintiff and defendant party names from case name.
+ * Handles adversarial cases (v.) and procedural prefixes (In re, Ex parte, etc.).
+ *
+ * @param caseName - Case name string
+ * @returns Party name data with raw and normalized fields
+ *
+ * @example
+ * ```typescript
+ * extractPartyNames("Smith v. Jones")
+ * // Returns: { plaintiff: "Smith", plaintiffNormalized: "smith", defendant: "Jones", defendantNormalized: "jones" }
+ *
+ * extractPartyNames("In re Smith")
+ * // Returns: { plaintiff: "In re Smith", plaintiffNormalized: "smith", proceduralPrefix: "In re" }
+ *
+ * extractPartyNames("People v. Smith")
+ * // Returns: { plaintiff: "People", plaintiffNormalized: "people", defendant: "Smith", defendantNormalized: "smith" }
+ * ```
+ */
+function extractPartyNames(caseName: string): {
+	plaintiff?: string
+	plaintiffNormalized?: string
+	defendant?: string
+	defendantNormalized?: string
+	proceduralPrefix?: string
+} {
+	// Procedural prefix patterns (anchored to start, case-insensitive)
+	const proceduralPrefixes = [
+		'In re',
+		'Ex parte',
+		'Matter of',
+		'State ex rel.',
+		'United States ex rel.',
+		'Application of',
+		'Petition of',
+		'Estate of',
+	]
+
+	// Check for procedural prefix first
+	for (const prefix of proceduralPrefixes) {
+		const prefixRegex = new RegExp(`^(${prefix})\\s+(.+)$`, 'i')
+		const match = prefixRegex.exec(caseName)
+		if (match) {
+			const matchedPrefix = match[1]
+			const subject = match[2]
+
+			// Check if there's a "v." after the prefix (adversarial case)
+			if (/\s+v\.?\s+/i.test(subject)) {
+				// Adversarial case with procedural-looking plaintiff (e.g., "Estate of X v. Y")
+				// Split on "v."
+				const vMatch = /^(.+?)\s+v\.?\s+(.+)$/i.exec(caseName)
+				if (vMatch) {
+					const plaintiff = vMatch[1].trim()
+					const defendant = vMatch[2].trim()
+					return {
+						plaintiff,
+						plaintiffNormalized: normalizePartyName(plaintiff),
+						defendant,
+						defendantNormalized: normalizePartyName(defendant),
+					}
+				}
+			} else {
+				// Pure procedural (no "v.")
+				return {
+					plaintiff: caseName,
+					plaintiffNormalized: normalizePartyName(subject),
+					proceduralPrefix: matchedPrefix,
+				}
+			}
+		}
+	}
+
+	// Split on "v." for adversarial cases
+	const vRegex = /^(.+?)\s+v\.?\s+(.+)$/i
+	const vMatch = vRegex.exec(caseName)
+	if (vMatch) {
+		const plaintiff = vMatch[1].trim()
+		const defendant = vMatch[2].trim()
+		return {
+			plaintiff,
+			plaintiffNormalized: normalizePartyName(plaintiff),
+			defendant,
+			defendantNormalized: normalizePartyName(defendant),
+		}
+	}
+
+	// No "v." and no procedural prefix - no parties extracted
+	return {}
+}
+
+/**
  * Extracts case citation metadata from a tokenized citation.
  *
  * Parses token text to extract:
@@ -405,6 +541,22 @@ export function extractCase(
 		}
 	}
 
+	// Phase 7: Extract party names from case name
+	let plaintiff: string | undefined
+	let plaintiffNormalized: string | undefined
+	let defendant: string | undefined
+	let defendantNormalized: string | undefined
+	let proceduralPrefix: string | undefined
+
+	if (caseName) {
+		const partyResult = extractPartyNames(caseName)
+		plaintiff = partyResult.plaintiff
+		plaintiffNormalized = partyResult.plaintiffNormalized
+		defendant = partyResult.defendant
+		defendantNormalized = partyResult.defendantNormalized
+		proceduralPrefix = partyResult.proceduralPrefix
+	}
+
 	// Translate positions from clean → original (citation core only - span unchanged)
 	const originalStart =
 		transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
@@ -488,5 +640,10 @@ export function extractCase(
 		fullSpan,
 		caseName,
 		disposition,
+		plaintiff,
+		plaintiffNormalized,
+		defendant,
+		defendantNormalized,
+		proceduralPrefix,
 	}
 }
