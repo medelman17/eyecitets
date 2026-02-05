@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 8 (Type System & Blank Pages)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-02-05 — Completed 05-01-PLAN.md (Type System Extensions)
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-02-05 — Completed 05-02-PLAN.md (Blank Page Recognition)
 
-Progress: ████████░░░░░░░░ 52% (18/26 plans total, 17/17 v1.0 complete, 1/9 v1.1 complete)
+Progress: █████████░░░░░░░ 54% (19/26 plans total, 17/17 v1.0 complete, 2/9 v1.1 complete)
 
 Config:
 {
@@ -55,15 +55,15 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 1
-- Average duration: ~2 min
-- Total execution time: ~2 min
+- Total plans completed: 2
+- Average duration: ~2.5 min
+- Total execution time: ~5 min
 
 **By Phase (v1.1-alpha):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 5. Type System & Blank Pages | 1/2 | ~2 min | ~2 min |
+| 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
 
 ## Accumulated Context
 
@@ -74,6 +74,9 @@ Config:
 | 05-01 | Page field made optional | Blank page placeholders have no numeric value; undefined cleaner than sentinel | Type system now permits citations without page numbers |
 | 05-01 | All v1.1 fields optional | Incremental feature rollout across phases 5-8 | 100% backward compatibility with v1.0 consumers |
 | 05-01 | JSDoc specifies which phase populates each field | Forward declarations for upcoming phases | Improves developer experience |
+| 05-02 | Require 3+ chars for blank placeholders | Single dash/underscore could be legitimate text | Avoids false positives while matching real patterns |
+| 05-02 | Use lookahead instead of word boundary | Dash is non-word char, \b doesn't work after it | Enables dash placeholder matching |
+| 05-02 | Override confidence to 0.8 for blank pages | Blank pages are structurally valid but semantically incomplete | Consistent signal to consumers about missing page info |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 13:27 (plan execution)
-Stopped at: Completed 05-01-PLAN.md
-Resume file: .planning/phases/05-type-system-blank-pages/05-01-SUMMARY.md
+Last session: 2026-02-05 13:31 (plan execution)
+Stopped at: Completed 05-02-PLAN.md (Phase 5 complete)
+Resume file: .planning/phases/05-type-system-blank-pages/05-02-SUMMARY.md
