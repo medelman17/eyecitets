@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Architecture** - Project scaffolding, TypeScript config, architectural design ✓
 - [x] **Phase 2: Core Parsing** - Tokenization, citation extraction, metadata, text cleaning ✓
-- [ ] **Phase 3: Reporter Database & Annotation** - Reporter data integration, bundle optimization, annotation
+- [x] **Phase 3: Reporter Database & Annotation** - Reporter data integration, bundle optimization, annotation ✓
 - [ ] **Phase 4: Short-Form Resolution & Integration** - Id./Supra resolution, comprehensive testing, documentation
 
 ## Phase Details
@@ -69,10 +69,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Reporter database loader with lazy loading and Map-based O(1) lookup
-- [ ] 03-02-PLAN.md — Annotation API with callback and template modes, auto-escaping
-- [ ] 03-03-PLAN.md — Citation validation with confidence scoring and degraded mode
-- [ ] 03-04-PLAN.md — Bundle optimization, performance validation, integration tests
+- [x] 03-01-PLAN.md — Reporter database loader with lazy loading and Map-based O(1) lookup
+- [x] 03-02-PLAN.md — Annotation API with callback and template modes, auto-escaping
+- [x] 03-03-PLAN.md — Citation validation with confidence scoring and degraded mode
+- [x] 03-04-PLAN.md — Bundle optimization, performance validation, integration tests
 
 ### Phase 4: Short-Form Resolution & Integration
 **Goal**: Resolve Id., Supra, and short-form citations to antecedents with document-scoped state, complete testing and documentation
@@ -99,5 +99,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & Architecture | 3/3 | ✓ Complete | 2026-02-05 |
 | 2. Core Parsing | 6/6 | ✓ Complete | 2026-02-05 |
-| 3. Reporter Database & Annotation | 0/4 | Not started | - |
+| 3. Reporter Database & Annotation | 4/4 | ✓ Complete | 2026-02-05 |
 | 4. Short-Form Resolution & Integration | 0/TBD | Not started | - |

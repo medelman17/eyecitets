@@ -54,10 +54,10 @@ Requirements for initial release. Full feature parity with Python eyecite.
 
 ### Annotation
 
-- [ ] **ANN-01**: Annotate citations with before/after markup strings
-- [ ] **ANN-02**: Support custom annotation functions per citation
-- [ ] **ANN-03**: Preserve existing HTML/XML markup during annotation
-- [ ] **ANN-04**: Handle HTML entities correctly during annotation
+- [x] **ANN-01**: Annotate citations with before/after markup strings
+- [x] **ANN-02**: Support custom annotation functions per citation
+- [x] **ANN-03**: Preserve existing HTML/XML markup during annotation
+- [x] **ANN-04**: Handle HTML entities correctly during annotation
 
 ### Text Cleaning
 
@@ -70,11 +70,11 @@ Requirements for initial release. Full feature parity with Python eyecite.
 
 ### Data
 
-- [ ] **DATA-01**: Load reporter database from reporters-db
-- [ ] **DATA-02**: Load laws database
-- [ ] **DATA-03**: Load journals database
-- [ ] **DATA-04**: Support lazy-loading of reporter data
-- [ ] **DATA-05**: Support custom reporter registration at runtime
+- [x] **DATA-01**: Load reporter database from reporters-db
+- [x] **DATA-02**: Load laws database
+- [x] **DATA-03**: Load journals database
+- [x] **DATA-04**: Support lazy-loading of reporter data
+- [x] **DATA-05**: Support custom reporter registration at runtime
 
 ### Platform
 
@@ -90,8 +90,8 @@ Requirements for initial release. Full feature parity with Python eyecite.
 
 ### Performance
 
-- [ ] **PERF-01**: Bundle size <50KB gzipped (core, without full reporter DB)
-- [ ] **PERF-02**: Process 10KB document in <100ms
+- [x] **PERF-01**: Bundle size <50KB gzipped (core, without full reporter DB)
+- [x] **PERF-02**: Process 10KB document in <100ms
 - [x] **PERF-03**: Zero runtime dependencies
 
 ### Developer Experience
@@ -174,21 +174,21 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RES-04 | Phase 4 | Pending |
 | RES-05 | Phase 4 | Pending |
 | RES-06 | Phase 4 | Pending |
-| ANN-01 | Phase 3 | Pending |
-| ANN-02 | Phase 3 | Pending |
-| ANN-03 | Phase 3 | Pending |
-| ANN-04 | Phase 3 | Pending |
+| ANN-01 | Phase 3 | Complete |
+| ANN-02 | Phase 3 | Complete |
+| ANN-03 | Phase 3 | Complete |
+| ANN-04 | Phase 3 | Complete |
 | CLN-01 | Phase 2 | Complete |
 | CLN-02 | Phase 2 | Complete |
 | CLN-03 | Phase 2 | Complete |
 | CLN-04 | Phase 2 | Complete |
 | CLN-05 | Phase 2 | Complete |
 | CLN-06 | Phase 2 | Complete |
-| DATA-01 | Phase 3 | Pending |
-| DATA-02 | Phase 3 | Pending |
-| DATA-03 | Phase 3 | Pending |
-| DATA-04 | Phase 3 | Pending |
-| DATA-05 | Phase 3 | Pending |
+| DATA-01 | Phase 3 | Complete |
+| DATA-02 | Phase 3 | Complete |
+| DATA-03 | Phase 3 | Complete |
+| DATA-04 | Phase 3 | Complete |
+| DATA-05 | Phase 3 | Complete |
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
 | PLAT-03 | Phase 1 | Complete |
@@ -198,8 +198,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAT-07 | Phase 1 | Complete |
 | PLAT-08 | Phase 1 | Complete |
 | PLAT-09 | Phase 1 | Complete |
-| PERF-01 | Phase 3 | Pending |
-| PERF-02 | Phase 3 | Pending |
+| PERF-01 | Phase 3 | Complete |
+| PERF-02 | Phase 3 | Complete |
 | PERF-03 | Phase 1 | Complete |
 | DX-01 | Phase 1 | Complete |
 | DX-02 | Phase 1 | Complete |
@@ -219,4 +219,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2025-02-04*
-*Last updated: 2026-02-05 after Phase 2 completion*
+*Last updated: 2026-02-05 after Phase 3 completion*
