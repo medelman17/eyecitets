@@ -1,7 +1,11 @@
 import { defineConfig } from "tsdown"
 
 export default defineConfig({
-  entry: "src/index.ts",
+  entry: {
+    index: "src/index.ts",
+    "data/index": "src/data/index.ts",
+    "annotate/index": "src/annotate/index.ts",
+  },
   format: ["esm", "cjs"],
   dts: true,
   minify: true,

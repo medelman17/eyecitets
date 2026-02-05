@@ -13,6 +13,11 @@
       "types": "./dist/data/index.d.ts",
       "import": "./dist/data/index.mjs",
       "require": "./dist/data/index.cjs"
+    },
+    "./annotate": {
+      "types": "./dist/annotate/index.d.ts",
+      "import": "./dist/annotate/index.mjs",
+      "require": "./dist/annotate/index.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -31,7 +36,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint src tests",
     "format": "biome format --write src tests",
-    "size": "size-limit"
+    "size": "size-limit",
+    "check:size": "npx tsx scripts/check-bundle-size.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.0",
