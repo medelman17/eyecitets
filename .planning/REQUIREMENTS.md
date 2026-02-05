@@ -9,10 +9,10 @@ Requirements for extraction accuracy milestone. Each maps to roadmap phases.
 
 ### Full Citation Span
 
-- [ ] **SPAN-01**: Extract case name from text preceding citation core (backward search for "v." pattern)
-- [ ] **SPAN-02**: Calculate `fullSpan` field covering case name through closing parenthetical
-- [ ] **SPAN-03**: Provide structured `caseName` field with the extracted case name string
-- [ ] **SPAN-04**: Existing `span` field unchanged (citation core only) for backward compatibility
+- [x] **SPAN-01**: Extract case name from text preceding citation core (backward search for "v." pattern)
+- [x] **SPAN-02**: Calculate `fullSpan` field covering case name through closing parenthetical
+- [x] **SPAN-03**: Provide structured `caseName` field with the extracted case name string
+- [x] **SPAN-04**: Existing `span` field unchanged (citation core only) for backward compatibility
 - [ ] **SPAN-05**: Annotation supports full citation span mode (annotate from case name through parenthetical)
 
 ### Party Name Extraction
@@ -39,10 +39,10 @@ Requirements for extraction accuracy milestone. Each maps to roadmap phases.
 
 ### Complex Parentheticals
 
-- [ ] **PAREN-01**: Extract court from parentheticals containing month/day dates: `(2d Cir. Jan. 15, 2020)`
-- [ ] **PAREN-02**: Extract structured date with year, month, day fields
-- [ ] **PAREN-03**: Handle parentheticals with court only, date only, or both
-- [ ] **PAREN-04**: Handle multiple date formats: `Jan. 15, 2020`, `January 15, 2020`, `1/15/2020`
+- [x] **PAREN-01**: Extract court from parentheticals containing month/day dates: `(2d Cir. Jan. 15, 2020)`
+- [x] **PAREN-02**: Extract structured date with year, month, day fields
+- [x] **PAREN-03**: Handle parentheticals with court only, date only, or both
+- [x] **PAREN-04**: Handle multiple date formats: `Jan. 15, 2020`, `January 15, 2020`, `1/15/2020`
 
 ### Quality & Compatibility
 
@@ -93,14 +93,14 @@ Deferred to later milestones.
 | BLANK-02 | Phase 5 | Complete |
 | BLANK-03 | Phase 5 | Complete |
 | BLANK-04 | Phase 5 | Complete |
-| SPAN-01 | Phase 6 | Pending |
-| SPAN-02 | Phase 6 | Pending |
-| SPAN-03 | Phase 6 | Pending |
-| SPAN-04 | Phase 6 | Pending |
-| PAREN-01 | Phase 6 | Pending |
-| PAREN-02 | Phase 6 | Pending |
-| PAREN-03 | Phase 6 | Pending |
-| PAREN-04 | Phase 6 | Pending |
+| SPAN-01 | Phase 6 | Complete |
+| SPAN-02 | Phase 6 | Complete |
+| SPAN-03 | Phase 6 | Complete |
+| SPAN-04 | Phase 6 | Complete |
+| PAREN-01 | Phase 6 | Complete |
+| PAREN-02 | Phase 6 | Complete |
+| PAREN-03 | Phase 6 | Complete |
+| PAREN-04 | Phase 6 | Complete |
 | PARTY-01 | Phase 7 | Pending |
 | PARTY-02 | Phase 7 | Pending |
 | PARTY-03 | Phase 7 | Pending |
@@ -122,4 +122,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after Phase 5 completion*
+*Last updated: 2026-02-05 after Phase 6 completion*

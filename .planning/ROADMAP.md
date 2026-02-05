@@ -85,8 +85,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Date parsing utilities (TDD: parseMonth, parseDate, toIsoDate)
-- [ ] 06-02-PLAN.md — Case name extraction, unified parenthetical parser, fullSpan calculation
+- [x] 06-01-PLAN.md — Date parsing utilities (TDD: parseMonth, parseDate, toIsoDate)
+- [x] 06-02-PLAN.md — Case name extraction, unified parenthetical parser, fullSpan calculation
 
 #### Phase 7: Party Name Extraction
 **Goal**: Extract plaintiff and defendant from case names for improved supra resolution
@@ -133,6 +133,6 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Other Citation Types | v1.0-alpha | 4/4 | Complete | 2026-02-05 |
 | 4. Resolution & Annotation | v1.0-alpha | 6/6 | Complete | 2026-02-05 |
 | 5. Type System & Blank Pages | v1.1 | 2/2 | Complete | 2026-02-05 |
-| 6. Full Span & Complex Parentheticals | v1.1 | 0/2 | Not started | - |
+| 6. Full Span & Complex Parentheticals | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 7. Party Name Extraction | v1.1 | 0/2 | Not started | - |
 | 8. Parallel Linking & Quality Validation | v1.1 | 0/2 | Not started | - |

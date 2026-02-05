@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Developers can extract, resolve, and annotate legal citations from text without Python infrastructure
-**Current focus:** v1.1 Extraction Accuracy - Phase 6 (Full Span & Complex Parentheticals)
+**Current focus:** v1.1 Extraction Accuracy - Phase 7 (Party Name Extraction)
 
 ## Current Position
 
-Phase: 6 of 8 (Full Span & Complex Parentheticals)
-Plan: 2 of 3
-Status: In progress
-Last activity: 2026-02-05 — Completed 06-02-PLAN.md
+Phase: 7 of 8 (Party Name Extraction)
+Plan: Ready to plan Phase 7
+Status: Ready to plan
+Last activity: 2026-02-05 — Phase 6 complete, verified
 
-Progress: ██████████░░░░░░ 62% (21/26 plans total, 17/17 v1.0 complete, 4/9 v1.1 complete)
+Progress: ███████████░░░░░ 62% (21/26 plans total, 17/17 v1.0 complete, 4/9 v1.1 complete)
 
-**Phase 5 verified:** 4/4 success criteria passed
+**Phase 6 verified:** 11/11 must-haves passed, 5/5 success criteria passed
 
 Config:
 {
@@ -38,7 +38,7 @@ Config:
 ## Milestone History
 
 - v1.0-alpha: 4 phases, 17 plans, 368 tests, shipped 2026-02-05
-- v1.1 Extraction Accuracy: 4 phases, 9 plans (estimated), in progress (1/9 complete)
+- v1.1 Extraction Accuracy: 4 phases, 9 plans (estimated), in progress (4/9 complete)
 
 ## Performance Metrics
 
@@ -66,7 +66,7 @@ Config:
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
-| 6. Full Span & Complex Parentheticals | 2/3 | ~7.4 min | ~3.7 min |
+| 6. Full Span & Complex Parentheticals | 2/2 | ~7.4 min | ~3.7 min |
 
 ## Accumulated Context
 
@@ -107,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 14:36 (plan execution)
-Stopped at: Completed 06-02-PLAN.md
-Resume file: .planning/phases/06-full-span-complex-parentheticals/06-02-SUMMARY.md
+Last session: 2026-02-05 (phase execution)
+Stopped at: Phase 6 complete, verified
+Resume file: .planning/phases/06-full-span-complex-parentheticals/06-VERIFICATION.md
