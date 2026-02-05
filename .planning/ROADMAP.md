@@ -88,10 +88,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Short-form detection patterns (Id./Ibid./supra) with ReDoS protection and supra type
-- [ ] 04-02-PLAN.md — Resolution type system and Levenshtein distance for fuzzy party matching
-- [ ] 04-03-PLAN.md — DocumentResolver with sequential processing, scope boundaries, and resolution algorithms
-- [ ] 04-04-PLAN.md — Pipeline integration with resolve option, integration tests, and README documentation
+- [ ] 04-01-PLAN.md — Short-form detection patterns (Id./Ibid./supra) with types and ReDoS protection
+- [ ] 04-02-PLAN.md — Short-form extraction functions and tokenizer integration
+- [ ] 04-03-PLAN.md — DocumentResolver with Levenshtein matching, scope boundaries, and full resolution
+- [ ] 04-04-PLAN.md — Pipeline integration with resolve option, integration tests, and README docs
 
 ## Progress
 
@@ -103,4 +103,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & Architecture | 3/3 | ✓ Complete | 2026-02-05 |
 | 2. Core Parsing | 6/6 | ✓ Complete | 2026-02-05 |
 | 3. Reporter Database & Annotation | 4/4 | ✓ Complete | 2026-02-05 |
-| 4. Short-Form Resolution & Integration | 0/4 | Not started | - |
+| 4. Short-Form Resolution & Integration | 0/4 | Planned | - |
