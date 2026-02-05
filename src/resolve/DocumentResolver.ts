@@ -13,11 +13,11 @@
 import type {
   Citation,
   FullCaseCitation,
-  FullCitationType,
   IdCitation,
   SupraCitation,
   ShortFormCaseCitation,
 } from '../types/citation'
+import { isFullCitation } from '../types/guards'
 import type {
   ResolutionOptions,
   ResolutionResult,
@@ -109,7 +109,7 @@ export class DocumentResolver {
           break
         default:
           // Full citation - update context for future resolutions
-          if (this.isFullCitation(citation)) {
+          if (isFullCitation(citation)) {
             this.context.lastFullCitation = i
             this.trackFullCitation(citation, i)
           }
@@ -241,14 +241,6 @@ export class DocumentResolver {
     }
 
     return this.createFailureResult('No matching full case citation found')
-  }
-
-  /**
-   * Checks if a citation is a full citation (not short-form).
-   */
-  private isFullCitation(citation: Citation): boolean {
-    const fullTypes: Set<FullCitationType> = new Set(['case', 'statute', 'journal', 'neutral', 'publicLaw', 'federalRegister'])
-    return fullTypes.has(citation.type as FullCitationType)
   }
 
   /**

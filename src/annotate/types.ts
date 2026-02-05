@@ -26,7 +26,7 @@ import type { Citation } from '../types/citation'
  * })
  * ```
  */
-export interface AnnotationOptions {
+export interface AnnotationOptions<C extends Citation = Citation> {
   /**
    * Apply annotations to cleaned text (true) or original text (false).
    *
@@ -66,7 +66,7 @@ export interface AnnotationOptions {
    * @param surrounding - Text around the citation (for context-aware markup)
    * @returns Complete markup string (replaces citation.matchedText)
    */
-  callback?: (citation: Citation, surrounding: string) => string
+  callback?: (citation: C, surrounding: string) => string
 
   /**
    * Template mode: simple before/after markup strings.

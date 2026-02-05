@@ -45,10 +45,10 @@ import type { AnnotationOptions, AnnotationResult } from './types'
  * const newPos = result.positionMap.get(originalPos)
  * ```
  */
-export function annotate(
+export function annotate<C extends Citation = Citation>(
   text: string,
-  citations: Citation[],
-  options: AnnotationOptions = {}
+  citations: C[],
+  options: AnnotationOptions<C> = {}
 ): AnnotationResult {
   const {
     useCleanText = false,

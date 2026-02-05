@@ -284,3 +284,14 @@ export type FullCitation = FullCaseCitation | StatuteCitation | JournalCitation 
  * Union of all short-form citation types (Id., supra, short-form case).
  */
 export type ShortFormCitation = IdCitation | SupraCitation | ShortFormCaseCitation
+
+/**
+ * Extract the Citation subtype for a given type discriminator.
+ *
+ * @example
+ * ```typescript
+ * type CaseCit = CitationOfType<'case'>  // FullCaseCitation
+ * type IdCit = CitationOfType<'id'>      // IdCitation
+ * ```
+ */
+export type CitationOfType<T extends CitationType> = Extract<Citation, { type: T }>

@@ -12,11 +12,13 @@
  * - Use global flag /g for matchAll()
  */
 
+import type { FullCitationType } from '@/types/citation'
+
 export interface Pattern {
   id: string
   regex: RegExp
   description: string
-  type: 'case' | 'statute' | 'journal' | 'neutral' | 'publicLaw' | 'federalRegister'
+  type: FullCitationType
 }
 
 export const casePatterns: Pattern[] = [

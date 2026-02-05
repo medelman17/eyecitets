@@ -3,6 +3,7 @@ export type {
   Citation,
   CitationType,
   CitationBase,
+  CitationOfType,
   FullCaseCitation,
   StatuteCitation,
   JournalCitation,
@@ -18,3 +19,4 @@ export type {
   ShortFormCitation,
   Warning
 } from "./citation"
+export { isFullCitation, isShortFormCitation, isCaseCitation, assertUnreachable } from "./guards"
