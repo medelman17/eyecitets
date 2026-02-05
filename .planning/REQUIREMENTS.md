@@ -25,10 +25,10 @@ Requirements for extraction accuracy milestone. Each maps to roadmap phases.
 
 ### Blank Page Numbers
 
-- [ ] **BLANK-01**: Recognize `___`, `---`, `____`, `----` as valid page placeholders in case citations
-- [ ] **BLANK-02**: Set `hasBlankPage: true` flag on citations with placeholder pages
-- [ ] **BLANK-03**: `page` field is `undefined` for blank-page citations
-- [ ] **BLANK-04**: Confidence lowered to 0.8 for blank-page citations
+- [x] **BLANK-01**: Recognize `___`, `---`, `____`, `----` as valid page placeholders in case citations
+- [x] **BLANK-02**: Set `hasBlankPage: true` flag on citations with placeholder pages
+- [x] **BLANK-03**: `page` field is `undefined` for blank-page citations
+- [x] **BLANK-04**: Confidence lowered to 0.8 for blank-page citations
 
 ### Parallel Citation Linking
 
@@ -46,7 +46,7 @@ Requirements for extraction accuracy milestone. Each maps to roadmap phases.
 
 ### Quality & Compatibility
 
-- [ ] **QUAL-01**: All new fields are optional — existing consumer code unaffected
+- [x] **QUAL-01**: All new fields are optional — existing consumer code unaffected
 - [ ] **QUAL-02**: Bundle size remains under 50KB gzipped
 - [ ] **QUAL-03**: Performance remains under 100ms for 10KB documents
 - [ ] **QUAL-04**: All existing tests continue to pass
@@ -88,11 +88,11 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUAL-01 | Phase 5 | Pending |
-| BLANK-01 | Phase 5 | Pending |
-| BLANK-02 | Phase 5 | Pending |
-| BLANK-03 | Phase 5 | Pending |
-| BLANK-04 | Phase 5 | Pending |
+| QUAL-01 | Phase 5 | Complete |
+| BLANK-01 | Phase 5 | Complete |
+| BLANK-02 | Phase 5 | Complete |
+| BLANK-03 | Phase 5 | Complete |
+| BLANK-04 | Phase 5 | Complete |
 | SPAN-01 | Phase 6 | Pending |
 | SPAN-02 | Phase 6 | Pending |
 | SPAN-03 | Phase 6 | Pending |
@@ -122,4 +122,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after roadmap creation*
+*Last updated: 2026-02-05 after Phase 5 completion*

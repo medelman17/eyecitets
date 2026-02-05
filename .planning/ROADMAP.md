@@ -69,8 +69,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Extend FullCaseCitation type with optional fields + backward compat tests
-- [ ] 05-02-PLAN.md — Blank page placeholder recognition (TDD: patterns + extraction + tests)
+- [x] 05-01-PLAN.md — Extend FullCaseCitation type with optional fields + backward compat tests
+- [x] 05-02-PLAN.md — Blank page placeholder recognition (TDD: patterns + extraction + tests)
 
 #### Phase 6: Full Span & Complex Parentheticals
 **Goal**: Extract full citation boundaries and parse complex parentheticals with dates
@@ -133,7 +133,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Case Citations | v1.0-alpha | 3/3 | Complete | 2026-02-05 |
 | 3. Other Citation Types | v1.0-alpha | 4/4 | Complete | 2026-02-05 |
 | 4. Resolution & Annotation | v1.0-alpha | 6/6 | Complete | 2026-02-05 |
-| 5. Type System & Blank Pages | v1.1 | 0/2 | Planned | - |
+| 5. Type System & Blank Pages | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 6. Full Span & Complex Parentheticals | v1.1 | 0/3 | Not started | - |
 | 7. Party Name Extraction | v1.1 | 0/2 | Not started | - |
 | 8. Parallel Linking & Quality Validation | v1.1 | 0/2 | Not started | - |
