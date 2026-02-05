@@ -4,14 +4,74 @@
  * Port of Python eyecite with zero dependencies, browser compatibility,
  * and <50KB gzipped bundle size.
  *
+ * ## API Tiers
+ *
+ * **Convenience API (most users):**
+ * - `extractCitations(text)` / `extractCitationsAsync(text)` - Main extraction functions
+ *
+ * **Granular API (power users):**
+ * - `cleanText()` - Text cleaning with position tracking
+ * - `tokenize()` - Pattern matching to find citation candidates
+ * - `extractCase()`, `extractStatute()`, etc. - Individual extraction functions
+ *
+ * **Types:**
+ * - `Citation` and subtypes (`FullCaseCitation`, `StatuteCitation`, etc.)
+ * - `Span`, `TransformationMap`, `Token`, etc.
+ *
  * @packageDocumentation
  */
 
-// Public type exports
-export type { Span, TransformationMap, Citation, CitationType, CitationBase, FullCaseCitation, StatuteCitation, IdCitation } from "./types"
+// ============================================================================
+// Types (from Phase 1)
+// ============================================================================
 
-// Parser exports (Phase 2)
-// export { extract } from "./extract"
+export type {
+	Span,
+	TransformationMap,
+	Citation,
+	CitationType,
+	CitationBase,
+	FullCaseCitation,
+	StatuteCitation,
+	JournalCitation,
+	NeutralCitation,
+	PublicLawCitation,
+	FederalRegisterCitation,
+	IdCitation,
+} from './types'
+
+// ============================================================================
+// Main API (Phase 2) - Convenience Functions
+// ============================================================================
+
+export { extractCitations, extractCitationsAsync } from './extract/extractCitations'
+export type { ExtractOptions } from './extract/extractCitations'
+
+// ============================================================================
+// Granular APIs (Phase 2) - For Power Users
+// ============================================================================
+
+// Text Cleaning Layer
+export { cleanText } from './clean'
+export type { CleanTextResult, Warning } from './clean/cleanText'
+
+// Tokenization Layer
+export { tokenize } from './tokenize'
+export type { Token } from './tokenize/tokenizer'
+
+// Extraction Functions (for advanced use cases)
+export {
+	extractCase,
+	extractStatute,
+	extractJournal,
+	extractNeutral,
+	extractPublicLaw,
+	extractFederalRegister,
+} from './extract'
+
+// ============================================================================
+// Future: Phase 3 & 4
+// ============================================================================
 
 // Annotation exports (Phase 3)
 // export { annotate } from "./annotate"
