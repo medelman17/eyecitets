@@ -1034,3 +1034,273 @@ describe('blank page placeholders (BLANK-01 through BLANK-04)', () => {
 		})
 	})
 })
+
+describe('party name extraction (Phase 7)', () => {
+	describe('standard adversarial cases (PARTY-01)', () => {
+		it('extracts plaintiff and defendant from simple case name', () => {
+			const citations = extractCitations('Smith v. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Smith')
+				expect(citations[0].defendant).toBe('Jones')
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+				expect(citations[0].defendantNormalized).toBe('jones')
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+
+		it('preserves exact text in raw fields', () => {
+			const citations = extractCitations(
+				'The Smith Corp., Inc. v. Doe et al., 500 F.2d 123 (2020)',
+			)
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('The Smith Corp., Inc.')
+				expect(citations[0].defendant).toBe('Doe et al.')
+			}
+		})
+
+		it('normalizes plaintiff and defendant', () => {
+			const citations = extractCitations(
+				'The Smith Corp., Inc. v. Doe et al., 500 F.2d 123 (2020)',
+			)
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+				expect(citations[0].defendantNormalized).toBe('doe')
+			}
+		})
+
+		it('handles "v" without period', () => {
+			const citations = extractCitations('Smith v Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Smith')
+				expect(citations[0].defendant).toBe('Jones')
+			}
+		})
+
+		it('handles "vs." variant', () => {
+			const citations = extractCitations('Smith vs. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Smith')
+				expect(citations[0].defendant).toBe('Jones')
+			}
+		})
+	})
+
+	describe('multiple "v." handling', () => {
+		it('splits on first "v." only', () => {
+			const citations = extractCitations('People v. Smith v. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('People')
+				expect(citations[0].defendant).toBe('Smith v. Jones')
+			}
+		})
+	})
+
+	describe('procedural prefixes (PARTY-02)', () => {
+		it('extracts "In re" as procedural prefix', () => {
+			const citations = extractCitations('In re Smith, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('In re Smith')
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBe('In re')
+			}
+		})
+
+		it('extracts "Ex parte" as procedural prefix', () => {
+			const citations = extractCitations('Ex parte Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Ex parte Jones')
+				expect(citations[0].plaintiffNormalized).toBe('jones')
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBe('Ex parte')
+			}
+		})
+
+		it('extracts "Matter of" as procedural prefix', () => {
+			const citations = extractCitations('Matter of Johnson, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Matter of Johnson')
+				expect(citations[0].plaintiffNormalized).toBe('johnson')
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBe('Matter of')
+			}
+		})
+
+		it('handles "Estate of" without "v." as procedural', () => {
+			const citations = extractCitations('Estate of Smith, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Estate of Smith')
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBe('Estate of')
+			}
+		})
+
+		it('handles "Estate of X v. Y" as adversarial', () => {
+			const citations = extractCitations('Estate of Smith v. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Estate of Smith')
+				expect(citations[0].defendant).toBe('Jones')
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+
+		it('handles case-insensitive procedural prefix', () => {
+			const citations = extractCitations('IN RE SMITH, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].proceduralPrefix).toBe('IN RE')
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+			}
+		})
+	})
+
+	describe('government entity plaintiffs (PARTY-03)', () => {
+		it('treats "United States" as plaintiff, not procedural', () => {
+			const citations = extractCitations('United States v. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('United States')
+				expect(citations[0].defendant).toBe('Jones')
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+
+		it('treats "People" as plaintiff, not procedural', () => {
+			const citations = extractCitations('People v. Smith, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('People')
+				expect(citations[0].defendant).toBe('Smith')
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+
+		it('treats "Commonwealth" as plaintiff', () => {
+			const citations = extractCitations('Commonwealth v. Davis, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('Commonwealth')
+				expect(citations[0].defendant).toBe('Davis')
+			}
+		})
+
+		it('treats "State" as plaintiff', () => {
+			const citations = extractCitations('State v. Miller, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBe('State')
+				expect(citations[0].defendant).toBe('Miller')
+			}
+		})
+	})
+
+	describe('normalization pipeline', () => {
+		it('strips "et al." from defendant', () => {
+			const citations = extractCitations('Smith v. Doe et al., 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].defendantNormalized).toBe('doe')
+			}
+		})
+
+		it('strips "d/b/a" from party name', () => {
+			const citations = extractCitations(
+				'Smith d/b/a Smith Industries v. Jones, 500 F.2d 123 (2020)',
+			)
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('smith')
+			}
+		})
+
+		it('strips "aka" from party name', () => {
+			const citations = extractCitations('Jones aka Johnson v. Smith, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('jones')
+			}
+		})
+
+		it('strips leading article "The"', () => {
+			const citations = extractCitations(
+				'The Ford Motor Co. v. Smith, 500 F.2d 123 (2020)',
+			)
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('ford motor')
+			}
+		})
+
+		it('strips "Inc." corporate suffix', () => {
+			const citations = extractCitations('Apple Inc. v. Samsung, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('apple')
+			}
+		})
+
+		it('strips "Corp." corporate suffix', () => {
+			const citations = extractCitations(
+				'Microsoft Corp. v. Google, 500 F.2d 123 (2020)',
+			)
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('microsoft')
+			}
+		})
+
+		it('does not strip government entity "United States"', () => {
+			const citations = extractCitations('United States v. Jones, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('united states')
+			}
+		})
+
+		it('does not strip government entity "People"', () => {
+			const citations = extractCitations('People v. Smith, 500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiffNormalized).toBe('people')
+			}
+		})
+	})
+
+	describe('edge cases', () => {
+		it('handles undefined caseName', () => {
+			const citations = extractCitations('500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].plaintiff).toBeUndefined()
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].plaintiffNormalized).toBeUndefined()
+				expect(citations[0].defendantNormalized).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+
+		it('handles citation with no case name', () => {
+			// When no case name is found in backward search, party fields should be undefined
+			const citations = extractCitations('500 F.2d 123 (2020)')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'case') {
+				expect(citations[0].caseName).toBeUndefined()
+				expect(citations[0].plaintiff).toBeUndefined()
+				expect(citations[0].defendant).toBeUndefined()
+				expect(citations[0].proceduralPrefix).toBeUndefined()
+			}
+		})
+	})
+})

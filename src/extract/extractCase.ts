@@ -72,11 +72,11 @@ function extractCaseName(
 	const searchStart = Math.max(0, coreStart - maxLookback)
 	const precedingText = cleanedText.substring(searchStart, coreStart)
 
-	// Priority 1: Standard "v." format with comma before citation
-	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens
+	// Priority 1: Standard "v." or "vs." format with comma before citation
+	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens, slashes
 	// Stop at semicolon (multi-citation separator)
 	const vRegex =
-		/([A-Z][A-Za-z0-9\s.,'&()-]+?)\s+v\.?\s+([A-Za-z0-9\s.,'&()-]+?)\s*,\s*$/
+		/([A-Z][A-Za-z0-9\s.,'&()/-]+?)\s+v(?:s)?\.?\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/
 	const vMatch = vRegex.exec(precedingText)
 	if (vMatch) {
 		// Check for semicolon in matched text (would indicate crossing citation boundary)
@@ -87,9 +87,9 @@ function extractCaseName(
 		}
 	}
 
-	// Priority 2: Procedural prefixes
+	// Priority 2: Procedural prefixes (including Estate of)
 	const procRegex =
-		/\b(In re|Ex parte|Matter of)\s+([A-Za-z0-9\s.,'&()-]+?)\s*,\s*$/i
+		/\b(In re|Ex parte|Matter of|Estate of|State ex rel\.|United States ex rel\.|Application of|Petition of)\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/i
 	const procMatch = procRegex.exec(precedingText)
 	if (procMatch) {
 		if (!procMatch[0].includes(';')) {
@@ -234,9 +234,9 @@ function parseParenthetical(content: string): {
  * Normalize party name for matching by removing legal noise.
  * Normalization pipeline:
  * 1. Strip "et al." (case-insensitive)
- * 2. Strip "d/b/a" (case-insensitive)
- * 3. Strip "aka" (case-insensitive, word boundary)
- * 4. Strip trailing corporate suffixes (Inc., LLC, Corp., Ltd., Co., LLP, LP, P.C.)
+ * 2. Strip "d/b/a" and everything after (case-insensitive)
+ * 3. Strip "aka" and everything after (case-insensitive, word boundary)
+ * 4. Strip trailing corporate suffixes (Inc., LLC, Corp., Ltd., Co., LLP, LP, P.C.) - iterative
  * 5. Strip leading articles (The, A, An)
  * 6. Normalize whitespace
  * 7. Trim and lowercase
@@ -257,14 +257,19 @@ function normalizePartyName(name: string): string {
 	// Strip "et al." (with or without period, case-insensitive)
 	normalized = normalized.replace(/\bet\s+al\.?/gi, '')
 
-	// Strip "d/b/a" (case-insensitive)
-	normalized = normalized.replace(/\bd\/b\/a\b/gi, '')
+	// Strip "d/b/a" and everything after it (case-insensitive)
+	normalized = normalized.replace(/\s+d\/b\/a\b.*/gi, '')
 
-	// Strip "aka" (case-insensitive, word boundary)
-	normalized = normalized.replace(/\baka\b/gi, '')
+	// Strip "aka" and everything after it (case-insensitive, word boundary)
+	normalized = normalized.replace(/\s+aka\b.*/gi, '')
 
-	// Strip trailing corporate suffixes (with or without trailing period)
-	normalized = normalized.replace(/,?\s*(Inc|LLC|Corp|Ltd|Co|LLP|LP|P\.C)\.?\s*$/gi, '')
+	// Strip trailing corporate suffixes (with or without trailing period, handle comma)
+	// Repeat to handle multiple suffixes like "Corp., Inc."
+	let prev = ''
+	while (prev !== normalized) {
+		prev = normalized
+		normalized = normalized.replace(/,?\s*(Inc|LLC|Corp|Ltd|Co|LLP|LP|P\.C)\.?$/gi, '')
+	}
 
 	// Strip leading articles (only at start)
 	normalized = normalized.replace(/^(The|A|An)\s+/i, '')
