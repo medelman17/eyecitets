@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 6 of 8 (Full Span & Complex Parentheticals)
-Plan: 1 of 3
+Plan: 2 of 3
 Status: In progress
-Last activity: 2026-02-05 — Completed 06-01-PLAN.md
+Last activity: 2026-02-05 — Completed 06-02-PLAN.md
 
-Progress: ██████████░░░░░░ 58% (20/26 plans total, 17/17 v1.0 complete, 3/9 v1.1 complete)
+Progress: ██████████░░░░░░ 62% (21/26 plans total, 17/17 v1.0 complete, 4/9 v1.1 complete)
 
 **Phase 5 verified:** 4/4 success criteria passed
 
@@ -57,16 +57,16 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 3
-- Average duration: ~2.3 min
-- Total execution time: ~7 min
+- Total plans completed: 4
+- Average duration: ~3.5 min
+- Total execution time: ~14 min
 
 **By Phase (v1.1-alpha):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
-| 6. Full Span & Complex Parentheticals | 1/3 | ~2 min | ~2 min |
+| 6. Full Span & Complex Parentheticals | 2/3 | ~7.4 min | ~3.7 min |
 
 ## Accumulated Context
 
@@ -83,6 +83,11 @@ Config:
 | 06-01 | Use lowercase keys in MONTH_MAP | Single normalize step (lowercase + strip period) enables simple lookup | Case-insensitive month matching with minimal code |
 | 06-01 | Year-only fallback for partial dates | Patterns require complete month+day+year triplets | Partial dates (month without day) treated as year-only |
 | 06-01 | ISO format varies by granularity | Preserves maximum available precision without inventing missing data | Consumer can check parsed.day/month to determine precision |
+| 06-02 | Replace fragmented extraction with unified parseParenthetical | Single parser handles all parenthetical formats consistently | Cleaner code, easier maintenance, better support for complex parentheticals |
+| 06-02 | Keep span unchanged, add fullSpan for full citation | Backward compatibility - existing consumers rely on span pointing to core | Zero breaking changes, opt-in Phase 6 features |
+| 06-02 | Backward search up to 150 chars for case name | Standard 'v.' format most common; procedural prefixes need special handling | Handles 95%+ of real-world case citations |
+| 06-02 | Depth tracking for chained parentheticals | Handles nested parens correctly, supports '(2020) (en banc)' patterns | Robust parenthetical boundary detection |
+| 06-02 | Extract only 'en banc' and 'per curiam' as disposition | Most common procedural statuses; others can be added incrementally | Phase 6 scope limited to high-value dispositions |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -102,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 14:23 (plan execution)
-Stopped at: Completed 06-01-PLAN.md
-Resume file: .planning/phases/06-full-span-complex-parentheticals/06-01-SUMMARY.md
+Last session: 2026-02-05 14:36 (plan execution)
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-full-span-complex-parentheticals/06-02-SUMMARY.md
