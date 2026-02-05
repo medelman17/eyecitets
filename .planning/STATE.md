@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2025-02-04)
 ## Current Position
 
 Phase: 2 of 4 (Core Parsing)
-Plan: 2 of 6 complete
+Plan: 3 of 6 complete
 Status: In progress
-Last activity: 2026-02-04 — Completed 02-01-PLAN.md (text cleaning layer with position tracking)
+Last activity: 2026-02-04 — Completed 02-04-PLAN.md (extended citation types with metadata)
 
-Progress: [███░░░░░░░] 33%
+Progress: [████░░░░░░] 50%
 
 ## Phase 1 Plans (Complete)
 
@@ -30,16 +30,16 @@ Progress: [███░░░░░░░] 33%
 |------|------|-------------|--------|
 | 02-01 | 1 | Text cleaners (HTML stripping, Unicode normalization, whitespace) | Complete ✅ |
 | 02-02 | 1 | Citation regex patterns (case, statute, journal, neutral) with ReDoS protection | Complete ✅ |
+| 02-04 | 2 | Extended citation types (journal, neutral, public law, federal register) with metadata | Complete ✅ |
 | 02-03 | 2 | Tokenizer (pattern matching, candidate extraction) | Not started |
-| 02-04 | 2 | TransformationMap implementation (position tracking) | Not started |
 | 02-05 | 3 | Citation extraction and metadata parsing | Not started |
 | 02-06 | 3 | End-to-end parsing tests | Not started |
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 146s
+- Total plans completed: 6
+- Average duration: 120s
 - Total execution time: 0.20 hours
 
 **By Phase:**
@@ -47,11 +47,11 @@ Progress: [███░░░░░░░] 33%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | Phase 1 | 3/3 | 4 min | 80s |
-| Phase 2 | 2/6 | 8.6 min | 258s |
+| Phase 2 | 3/6 | 10.6 min | 212s |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (80s), 01-03 (120s), 01-02 (60s), 02-01 (306s), 02-02 (214s)
-- Trend: Phase 2 plans taking longer (more complex implementation)
+- Last 5 plans: 01-03 (120s), 01-02 (60s), 02-01 (306s), 02-02 (214s), 02-04 (107s)
+- Trend: 02-04 faster than previous Phase 2 plans (type-only changes)
 
 *Updated after each plan completion*
 
@@ -110,6 +110,15 @@ Recent decisions affecting current work:
 | PATTERN-03 | Individual named exports (casePatterns, statutePatterns, etc.) | Better tree-shaking, clearer API, modular imports |
 | CONFIG-01 | Add path aliases (@/*) to tsconfig and vitest config | Clean imports in tests without relative paths |
 
+**From 02-04 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| TYPE-04 | Confidence scoring included in CitationBase | Enables extraction layer to rank ambiguous matches; supports warning generation |
+| TYPE-05 | Processing metadata tracks performance | processTimeMs and patternsChecked enable ReDoS detection and pattern optimization |
+| TYPE-06 | Warning interface for malformed citations | Three severity levels with position tracking for precise error reporting |
+| TYPE-07 | Optional metadata enables progressive enhancement | All metadata fields optional; extraction layer populates as available; backward compatible |
+
 ### Pending Todos
 
 None yet.
@@ -125,6 +134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-04 (02-01 execution)
-Stopped at: Completed 02-01-PLAN.md - Text cleaning layer with position tracking
+Last session: 2026-02-04 (02-04 execution)
+Stopped at: Completed 02-04-PLAN.md - Extended citation types with metadata
 Resume file: None
