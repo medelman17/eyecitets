@@ -49,7 +49,7 @@ export function extractId(
 
 	// Parse Id. with optional pincite
 	// Pattern: Id. or Ibid. with optional "at [page]"
-	const idRegex = /[Ii]bid?\.(?:\s+at\s+(\d+))?/
+	const idRegex = /[Ii](?:d|bid)\.(?:\s+at\s+(\d+))?/
 	const match = idRegex.exec(text)
 
 	if (!match) {
