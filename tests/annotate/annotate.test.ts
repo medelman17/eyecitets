@@ -265,6 +265,131 @@ describe('annotate', () => {
     })
   })
 
+  describe('HTML tag snapping (#17)', () => {
+    it('should snap start position out of HTML tag', () => {
+      // Simulates a position that lands inside an <a> tag
+      const text = '145, <a id="p410" href="#p410">*410</a>11 N. H. 459'
+      // Citation mapped to position inside the <a> tag
+      const citation: Citation = {
+        type: 'case',
+        text: '41011 N. H. 459',
+        span: {
+          cleanStart: 5,
+          cleanEnd: 20,
+          originalStart: 15, // Inside the <a> tag's attributes
+          originalEnd: 51,
+        },
+        matchedText: '41011 N. H. 459',
+        confidence: 0.8,
+        processTimeMs: 0,
+        patternsChecked: 1,
+        volume: 41011,
+        reporter: 'N. H.',
+        page: 459,
+      }
+
+      const result = annotate(text, [citation], {
+        template: { before: '{', after: '}' },
+        autoEscape: false,
+      })
+
+      // Start should snap to before the <a> tag
+      expect(result.text).not.toContain('<a id="p4{10"')
+      expect(result.text).toContain('{')
+      expect(result.text).toContain('}')
+      expect(result.skipped).toHaveLength(0)
+    })
+
+    it('should snap end position out of HTML tag', () => {
+      const text = 'See 500 F.2d 1<em>23</em> here'
+      // End position lands inside <em> tag
+      const citation: Citation = {
+        type: 'case',
+        text: '500 F.2d 123',
+        span: {
+          cleanStart: 4,
+          cleanEnd: 16,
+          originalStart: 4,
+          originalEnd: 16, // Inside the <em> opening tag
+        },
+        matchedText: '500 F.2d 123',
+        confidence: 0.8,
+        processTimeMs: 0,
+        patternsChecked: 1,
+        volume: 500,
+        reporter: 'F.2d',
+        page: 123,
+      }
+
+      const result = annotate(text, [citation], {
+        template: { before: '[', after: ']' },
+        autoEscape: false,
+      })
+
+      // Should not break HTML tags
+      expect(result.text).not.toContain('<e]m>')
+      expect(result.skipped).toHaveLength(0)
+    })
+
+    it('should not alter positions that are outside HTML tags', () => {
+      const text = 'See 500 F.2d 123 (2020)'
+      const citations = [createCaseCitation(4, 16, '500 F.2d 123')]
+
+      const result = annotate(text, citations, {
+        template: { before: '<cite>', after: '</cite>' },
+      })
+
+      // Normal behavior — no HTML tags to snap around
+      expect(result.text).toBe('See <cite>500 F.2d 123</cite> (2020)')
+    })
+
+    it('should snap both positions when entirely inside a tag', () => {
+      // Entire citation is inside one tag attribute (pathological case)
+      // Both positions snap to the tag boundaries
+      const text = '<div data-citation="500 F.2d 123">content</div>'
+      const citation: Citation = {
+        type: 'case',
+        text: '500 F.2d 123',
+        span: {
+          cleanStart: 0,
+          cleanEnd: 12,
+          originalStart: 19, // Inside <div> tag attribute
+          originalEnd: 31,   // Still inside <div> tag attribute
+        },
+        matchedText: '500 F.2d 123',
+        confidence: 0.8,
+        processTimeMs: 0,
+        patternsChecked: 1,
+        volume: 500,
+        reporter: 'F.2d',
+        page: 123,
+      }
+
+      const result = annotate(text, [citation], {
+        template: { before: '[', after: ']' },
+        autoEscape: false,
+      })
+
+      // Both snap to tag boundaries — wraps the entire tag (not ideal but safe HTML)
+      expect(result.text).not.toContain('data-citation="500 F.2d [123')
+      expect(result.skipped).toHaveLength(0)
+    })
+
+    it('should handle annotation on clean text without snapping', () => {
+      // useCleanText mode should not do HTML snapping
+      const text = 'See 500 F.2d 123'
+      const citations = [createCaseCitation(4, 16, '500 F.2d 123')]
+
+      const result = annotate(text, citations, {
+        template: { before: '<cite>', after: '</cite>' },
+        useCleanText: true,
+      })
+
+      expect(result.text).toBe('See <cite>500 F.2d 123</cite>')
+      expect(result.skipped).toHaveLength(0)
+    })
+  })
+
   describe('edge cases', () => {
     it('should handle empty citations array', () => {
       const text = 'See 500 F.2d 123'
