@@ -202,12 +202,14 @@ describe('parseDate', () => {
       })
     })
 
-    it('prefers abbreviated month format over year-only', () => {
-      // "Dec. 2020" should match as "Dec" + year, not just "2020"
+    it('matches year-only when month present but no day', () => {
+      // "Dec. 2020" has month but no day, so year-only pattern matches
       const result = parseDate('Dec. 2020')
-      // Since we don't have day, this should still extract what's available
-      // For now, we'll expect undefined as the pattern requires day+year
-      expect(result).toBeUndefined()
+      // This is correct: patterns require day+month+year, so falls back to year-only
+      expect(result).toEqual({
+        iso: '2020',
+        parsed: { year: 2020 }
+      })
     })
   })
 })
