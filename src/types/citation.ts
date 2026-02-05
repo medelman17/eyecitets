@@ -6,6 +6,20 @@ import type { Span } from "./span"
 export type CitationType = "case" | "statute" | "journal" | "shortForm" | "id" | "supra"
 
 /**
+ * Warning generated during citation parsing.
+ */
+export interface Warning {
+  /** Severity level */
+  level: 'error' | 'warning' | 'info'
+  /** Description of the issue */
+  message: string
+  /** Position of the problematic region */
+  position: { start: number; end: number }
+  /** Additional context about the warning */
+  context?: string
+}
+
+/**
  * Base fields shared by all citation types.
  */
 export interface CitationBase {
@@ -14,6 +28,27 @@ export interface CitationBase {
 
   /** Position span in document (originalStart/End point to original text) */
   span: Span
+
+  /**
+   * Confidence score indicating match certainty (0-1).
+   * - 1.0: Certain match (e.g., exact reporter abbreviation in reporters-db)
+   * - 0.8-0.99: High confidence (e.g., common pattern, missing pincite)
+   * - 0.5-0.79: Medium confidence (e.g., ambiguous reporter abbreviation)
+   * - <0.5: Low confidence (e.g., unusual formatting)
+   */
+  confidence: number
+
+  /** Exact substring matched from the original text */
+  matchedText: string
+
+  /** Time spent processing this citation (milliseconds) */
+  processTimeMs: number
+
+  /** Number of regex patterns checked before match */
+  patternsChecked: number
+
+  /** Warnings for malformed or ambiguous regions */
+  warnings?: Warning[]
 }
 
 /**
