@@ -142,6 +142,13 @@ export interface FullCaseCitation extends CitationBase {
    * When true, page field will be undefined and confidence reduced to 0.8.
    */
   hasBlankPage?: boolean
+
+  /**
+   * Disposition or procedural status from parenthetical.
+   * Populated by Phase 6 (Complex Parentheticals).
+   * @example "en banc", "per curiam"
+   */
+  disposition?: string
 }
 
 /**
