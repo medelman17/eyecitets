@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2025-02-04)
 ## Current Position
 
 Phase: 4 of 4 (Short-form Resolution)
-Plan: 2 of 3 complete
-Status: In progress
-Last activity: 2026-02-05 — Completed 04-02-PLAN.md (short-form extraction integration)
+Plan: 3 of 3 complete
+Status: Phase complete
+Last activity: 2026-02-05 — Completed 04-03-PLAN.md (document-scoped resolution engine)
 
-Progress: [█████████░] 93%
+Progress: [██████████] 100%
 
 ## Phase 1 Plans (Complete)
 
@@ -44,20 +44,20 @@ Progress: [█████████░] 93%
 | 03-03 | 2 | Citation validation with confidence scoring | Complete ✅ |
 | 03-04 | 2 | Bundle optimization and integration tests | Complete ✅ |
 
-## Phase 4 Plans (In Progress)
+## Phase 4 Plans (Complete ✅)
 
 | Plan | Wave | Description | Status |
 |------|------|-------------|--------|
 | 04-01 | 1 | Short-form citation types and patterns (Id., Ibid., supra) | Complete ✅ |
 | 04-02 | 2 | Short-form extraction integration (tokenizer + extractors) | Complete ✅ |
-| 04-03 | 2 | Resolution engine (Id./supra/short-form resolution) | Not started |
+| 04-03 | 2 | Document-scoped resolution engine (Id./supra/short-form case) | Complete ✅ |
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 168s
-- Total execution time: 0.65 hours
+- Total plans completed: 15
+- Average duration: 177s
+- Total execution time: 0.74 hours
 
 **By Phase:**
 
@@ -66,11 +66,11 @@ Progress: [█████████░] 93%
 | Phase 1 | 3/3 | 4 min | 80s |
 | Phase 2 | 6/6 | 23.3 min | 233s |
 | Phase 3 | 4/4 | 11.0 min | 165s |
-| Phase 4 | 2/3 | 7.6 min | 230s |
+| Phase 4 | 3/3 | 12.1 min | 242s |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (164s), 03-03 (181s), 03-04 (137s), 04-01 (237s), 04-02 (222s)
-- Trend: Phase 4 plans averaging ~230s (comprehensive testing and integration)
+- Last 5 plans: 03-03 (181s), 03-04 (137s), 04-01 (237s), 04-02 (222s), 04-03 (270s)
+- Trend: Phase 4 plans averaging ~243s (complex resolution logic and comprehensive testing)
 
 *Updated after each plan completion*
 
@@ -208,6 +208,15 @@ Recent decisions affecting current work:
 | EXTRACT-01 | Unified pincite extraction from "at [page]" pattern across all short-form types | Consistent handling of pincites; follows legal citation conventions |
 | REGEX-01 | Pattern [Ii](?:d\|bid)\\. matches both "Id." and "Ibid." in single function | Avoids code duplication; both variants have same semantic meaning (immediate preceding citation) |
 
+**From 04-03 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| RES-01 | ResolvedCitation uses intersection type (Citation & {resolution?}) | Type-safe resolution metadata attachment without breaking existing Citation types |
+| RES-02 | Extract party names from citation text using 'v.' pattern matching | Supra resolution works with existing type system without schema changes |
+| RES-03 | Normalize reporter abbreviations by removing spaces and periods | Flexible short-form case matching handles reporter abbreviation variations |
+| RES-04 | Fuzzy party matching enabled by default with 0.8 threshold | More robust supra resolution at cost of potential false positives |
+
 ### Pending Todos
 
 None yet.
@@ -228,6 +237,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (04-02 execution)
-Stopped at: Completed 04-02-PLAN.md - Short-form extraction integration (Phase 4: Plan 2/3 complete)
+Last session: 2026-02-05 (04-03 execution)
+Stopped at: Completed 04-03-PLAN.md - Document-scoped resolution engine (Phase 4: All plans complete)
 Resume file: None
