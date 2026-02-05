@@ -76,8 +76,9 @@ export function extractCase(
 	const { text, span } = token
 
 	// Parse volume-reporter-page using regex
-	// Pattern: volume (digits) + reporter (letters/periods/spaces) + page (digits)
-	const volumeReporterPageRegex = /^(\d+)\s+([A-Za-z.\s]+?)\s+(\d+)/
+	// Pattern: volume (digits) + reporter (letters/periods/spaces/numbers) + page (digits)
+	// Use greedy matching for reporter to capture full abbreviation including spaces
+	const volumeReporterPageRegex = /^(\d+)\s+([A-Za-z0-9.\s]+)\s+(\d+)/
 	const match = volumeReporterPageRegex.exec(text)
 
 	if (!match) {
@@ -95,17 +96,17 @@ export function extractCase(
 	const pinciteMatch = pinciteRegex.exec(text)
 	const pincite = pinciteMatch ? Number.parseInt(pinciteMatch[1], 10) : undefined
 
+	// Extract optional year in parentheses (extract first for better matching)
+	// Pattern: 4-digit year anywhere in parentheses
+	const yearRegex = /\((?:[^)]*\s)?(\d{4})\)/
+	const yearMatch = yearRegex.exec(text)
+	const year = yearMatch ? Number.parseInt(yearMatch[1], 10) : undefined
+
 	// Extract optional court abbreviation in parentheses
-	// Pattern: "(text)" where text doesn't contain digits only (to avoid matching year)
+	// Pattern: "(text)" where text contains letters (captures full parenthetical)
 	const courtRegex = /\(([^)]*[A-Za-z][^)]*)\)/
 	const courtMatch = courtRegex.exec(text)
 	const court = courtMatch ? courtMatch[1].trim() : undefined
-
-	// Extract optional year in parentheses
-	// Pattern: "(4-digit year)"
-	const yearRegex = /\((\d{4})\)/
-	const yearMatch = yearRegex.exec(text)
-	const year = yearMatch ? Number.parseInt(yearMatch[1], 10) : undefined
 
 	// Translate positions from clean → original
 	const originalStart =
