@@ -3,7 +3,7 @@ import type { Span } from "./span"
 /**
  * Citation type discriminator for type-safe pattern matching.
  */
-export type CitationType = "case" | "statute" | "journal" | "neutral" | "publicLaw" | "federalRegister" | "id"
+export type CitationType = "case" | "statute" | "journal" | "neutral" | "publicLaw" | "federalRegister" | "id" | "supra" | "shortFormCase"
 
 /**
  * Warning generated during citation parsing.
@@ -214,6 +214,34 @@ export interface IdCitation extends CitationBase {
 }
 
 /**
+ * Supra citation (refers to earlier citation by party name).
+ *
+ * @example "Smith, supra"
+ * @example "Smith, supra, at 460"
+ */
+export interface SupraCitation extends CitationBase {
+  type: "supra"
+  /** Party name extracted from citation text */
+  partyName: string
+  /** Specific page reference */
+  pincite?: number
+}
+
+/**
+ * Short-form case citation (abbreviated reference to earlier full citation).
+ * Distinguished from full case by lack of case name.
+ *
+ * @example "500 F.2d at 125" (refers to earlier full citation at different page)
+ */
+export interface ShortFormCaseCitation extends CitationBase {
+  type: "shortFormCase"
+  volume: number
+  reporter: string
+  page?: number
+  pincite?: number
+}
+
+/**
  * Union type of all citation types.
  *
  * Use type guards via discriminated union:
@@ -238,3 +266,5 @@ export type Citation =
   | PublicLawCitation
   | FederalRegisterCitation
   | IdCitation
+  | SupraCitation
+  | ShortFormCaseCitation

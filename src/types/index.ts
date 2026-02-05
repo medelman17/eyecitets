@@ -10,5 +10,7 @@ export type {
   PublicLawCitation,
   FederalRegisterCitation,
   IdCitation,
+  SupraCitation,
+  ShortFormCaseCitation,
   Warning
 } from "./citation"
