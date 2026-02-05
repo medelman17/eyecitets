@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2025-02-04)
 
 **Core value:** Developers can extract, resolve, and annotate legal citations from text without Python infrastructure
-**Current focus:** Phase 2 complete — ready for Phase 3
+**Current focus:** Phase 4 in progress — Short-form resolution
 
 ## Current Position
 
-Phase: 3 of 4 (Reporter Database & Annotation)
-Plan: 4 of 4 complete
-Status: Phase complete
-Last activity: 2026-02-05 — Completed 03-04-PLAN.md (bundle optimization and integration tests)
+Phase: 4 of 4 (Short-form Resolution)
+Plan: 1 of 3 complete
+Status: In progress
+Last activity: 2026-02-05 — Completed 04-01-PLAN.md (short-form citation types and patterns)
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 87%
 
 ## Phase 1 Plans (Complete)
 
@@ -44,12 +44,20 @@ Progress: [████████░░] 80%
 | 03-03 | 2 | Citation validation with confidence scoring | Complete ✅ |
 | 03-04 | 2 | Bundle optimization and integration tests | Complete ✅ |
 
+## Phase 4 Plans (In Progress)
+
+| Plan | Wave | Description | Status |
+|------|------|-------------|--------|
+| 04-01 | 1 | Short-form citation types and patterns (Id., Ibid., supra) | Complete ✅ |
+| 04-02 | 2 | Id./Ibid. resolution engine | Not started |
+| 04-03 | 2 | Supra resolution engine | Not started |
+
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 153s
-- Total execution time: 0.51 hours
+- Total plans completed: 13
+- Average duration: 159s
+- Total execution time: 0.58 hours
 
 **By Phase:**
 
@@ -58,10 +66,11 @@ Progress: [████████░░] 80%
 | Phase 1 | 3/3 | 4 min | 80s |
 | Phase 2 | 6/6 | 23.3 min | 233s |
 | Phase 3 | 4/4 | 11.0 min | 165s |
+| Phase 4 | 1/3 | 3.95 min | 237s |
 
 **Recent Trend:**
-- Last 5 plans: 02-06 (296s), 03-01 (165s), 03-02 (164s), 03-03 (181s), 03-04 (137s)
-- Trend: Phase 3 accelerating (137s latest), average 165s per plan
+- Last 5 plans: 03-01 (165s), 03-02 (164s), 03-03 (181s), 03-04 (137s), 04-01 (237s)
+- Trend: 04-01 longer due to pattern refinement and comprehensive testing
 
 *Updated after each plan completion*
 
@@ -183,6 +192,14 @@ Recent decisions affecting current work:
 | BUNDLE-02 | Gzip-based size validation in CI/CD | Bundle sizes match real-world network transfer, not raw file size |
 | TEST-03 | Phase 3 integration tests validate full pipeline | Catches integration bugs; validates extraction + validation + annotation work together |
 
+**From 04-01 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| TYPE-03 | SupraCitation and ShortFormCaseCitation types with partyName/volume/reporter fields | Resolution engine (04-02/04-03) can distinguish citation reference types |
+| PATTERN-04 | Simple short-form patterns without trailing word boundaries for Id./Ibid. | Patterns correctly match Id./Ibid. in all contexts (sentence-final, mid-sentence) |
+| PATTERN-05 | Flexible SHORT_FORM_CASE_PATTERN allowing dots and spaces in reporter abbreviations | Pattern matches all standard short-form case citations across reporter types |
+
 ### Pending Todos
 
 None yet.
@@ -203,6 +220,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (03-04 execution)
-Stopped at: Completed 03-04-PLAN.md - Bundle optimization and integration tests (Phase 3: Complete ✅)
+Last session: 2026-02-05 (04-01 execution)
+Stopped at: Completed 04-01-PLAN.md - Short-form citation types and patterns (Phase 4: Plan 1/3 complete)
 Resume file: None
