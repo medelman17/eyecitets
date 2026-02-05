@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2025-02-04)
 ## Current Position
 
 Phase: 2 of 4 (Core Parsing)
-Plan: 3 of 6 complete
+Plan: 5 of 6 complete
 Status: In progress
-Last activity: 2026-02-04 — Completed 02-03-PLAN.md (tokenization layer with pattern matching)
+Last activity: 2026-02-05 — Completed 02-05-PLAN.md (citation extraction with metadata parsing)
 
-Progress: [███░░░░░░░] 40%
+Progress: [████░░░░░░] 50%
 
 ## Phase 1 Plans (Complete)
 
@@ -31,27 +31,27 @@ Progress: [███░░░░░░░] 40%
 | 02-01 | 1 | Text cleaners (HTML stripping, Unicode normalization, whitespace) | Complete ✅ |
 | 02-02 | 1 | Citation regex patterns (case, statute, journal, neutral) with ReDoS protection | Complete ✅ |
 | 02-03 | 2 | Tokenizer (pattern matching, candidate extraction) | Complete ✅ |
-| 02-04 | 2 | Extended citation types (journal, neutral, public law, federal register) with metadata | Not started |
-| 02-05 | 3 | Citation extraction and metadata parsing | Not started |
+| 02-04 | 2 | Extended citation types (journal, neutral, public law, federal register) with metadata | Skipped ⏭️ |
+| 02-05 | 3 | Citation extraction and metadata parsing | Complete ✅ |
 | 02-06 | 3 | End-to-end parsing tests | Not started |
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 152s
-- Total execution time: 0.25 hours
+- Total plans completed: 7
+- Average duration: 144s
+- Total execution time: 0.28 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | Phase 1 | 3/3 | 4 min | 80s |
-| Phase 2 | 3/6 | 11.4 min | 229s |
+| Phase 2 | 4/6 | 16.4 min | 246s |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (120s), 01-02 (60s), 02-01 (306s), 02-02 (214s), 02-03 (167s)
-- Trend: Phase 2 plans stabilizing around 200-300s (complex implementation)
+- Last 5 plans: 01-02 (60s), 02-01 (306s), 02-02 (214s), 02-03 (167s), 02-05 (308s)
+- Trend: Phase 2 plans averaging ~250s (complex implementation with tests)
 
 *Updated after each plan completion*
 
@@ -119,6 +119,16 @@ Recent decisions affecting current work:
 | TOKEN-03 | Multiple pattern matches allowed | Extraction layer (Plan 5) must deduplicate and validate tokens |
 | TOKEN-04 | Default patterns parameter concatenates all arrays | API is tokenize(text) for common case, tokenize(text, patterns) for control |
 
+**From 02-05 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| EXT-01 | Year extraction before court extraction in parentheticals | Both court and year correctly populated from combined parentheticals like "(9th Cir. 2020)" |
+| EXT-02 | Greedy reporter regex with numbers | Multi-word reporters like "So. 2d" and "F.3d" correctly extracted instead of truncated |
+| EXT-03 | Neutral citations have 1.0 confidence | Neutral format is unambiguous; always maximum confidence |
+| EXT-04 | Journal citations have 0.6 base confidence | Validation against database happens in Phase 3; Phase 2 only validates structure |
+| EXT-05 | Safe position translation fallback | cleanToOriginal.get(cleanPos) ?? cleanPos prevents errors with incomplete transformation maps |
+
 ### Pending Todos
 
 None yet.
@@ -134,6 +144,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-04 (02-03 execution)
-Stopped at: Completed 02-03-PLAN.md - Tokenization layer with pattern matching
+Last session: 2026-02-05 (02-05 execution)
+Stopped at: Completed 02-05-PLAN.md - Citation extraction with metadata parsing
 Resume file: None
