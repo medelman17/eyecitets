@@ -54,4 +54,16 @@ export const shortFormPatterns: Pattern[] = [
     description: 'Ibid. citations (e.g., "Ibid." or "Ibid. at 125")',
     type: 'case', // Will be typed as 'id' in extraction layer
   },
+  {
+    id: 'supra',
+    regex: SUPRA_PATTERN,
+    description: 'Supra citations (e.g., "Smith, supra" or "Smith, supra, at 460")',
+    type: 'case', // Will be typed as 'supra' in extraction layer
+  },
+  {
+    id: 'shortFormCase',
+    regex: SHORT_FORM_CASE_PATTERN,
+    description: 'Short-form case citations (e.g., "500 F.2d at 125")',
+    type: 'case', // Will be typed as 'shortFormCase' in extraction layer
+  },
 ]

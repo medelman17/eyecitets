@@ -38,6 +38,8 @@ export type {
 	PublicLawCitation,
 	FederalRegisterCitation,
 	IdCitation,
+	SupraCitation,
+	ShortFormCaseCitation,
 } from './types'
 
 // ============================================================================
@@ -70,11 +72,20 @@ export {
 } from './extract'
 
 // ============================================================================
-// Future: Phase 3 & 4
+// Phase 3: Annotation
 // ============================================================================
 
-// Annotation exports (Phase 3)
-// export { annotate } from "./annotate"
+// Note: Annotation API available via separate entry point:
+// import { annotate } from 'eyecite-ts/annotate'
 
-// Resolution exports (Phase 4)
-// export { resolve } from "./resolve"
+// ============================================================================
+// Phase 4: Resolution
+// ============================================================================
+
+export { resolveCitations, DocumentResolver } from './resolve'
+export type {
+	ResolutionOptions,
+	ResolutionResult,
+	ResolvedCitation,
+	ScopeStrategy,
+} from './resolve/types'

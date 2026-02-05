@@ -21,14 +21,18 @@ import {
 	extractPublicLaw,
 	extractFederalRegister,
 } from '@/extract'
+import { extractId, extractSupra, extractShortFormCase } from './extractShortForms'
 import {
 	casePatterns,
 	statutePatterns,
 	journalPatterns,
 	neutralPatterns,
+	shortFormPatterns,
 } from '@/patterns'
+import { resolveCitations } from '../resolve'
 import type { Citation } from '@/types/citation'
 import type { Pattern } from '@/patterns'
+import type { ResolutionOptions, ResolvedCitation } from '../resolve/types'
 
 /**
  * Options for customizing citation extraction behavior.
@@ -54,7 +58,7 @@ export interface ExtractOptions {
 	 * Custom regex patterns (overrides defaults).
 	 *
 	 * If provided, these patterns replace the default pattern set:
-	 * [casePatterns, statutePatterns, journalPatterns, neutralPatterns]
+	 * [casePatterns, statutePatterns, journalPatterns, neutralPatterns, shortFormPatterns]
 	 *
 	 * @example
 	 * ```typescript
@@ -65,6 +69,37 @@ export interface ExtractOptions {
 	 * ```
 	 */
 	patterns?: Pattern[]
+
+	/**
+	 * Resolve short-form citations to their full antecedents (default: false).
+	 *
+	 * If true, returns ResolvedCitation[] with resolution metadata for short-form citations
+	 * (Id., supra, short-form case). Full citations are unchanged.
+	 *
+	 * @example
+	 * ```typescript
+	 * const text = "Smith v. Jones, 500 F.2d 100 (1974). Id. at 105."
+	 * const citations = extractCitations(text, { resolve: true })
+	 * // citations[1].resolution.resolvedTo === 0 (points to Smith v. Jones)
+	 * ```
+	 */
+	resolve?: boolean
+
+	/**
+	 * Options for citation resolution (only used if resolve: true).
+	 *
+	 * @example
+	 * ```typescript
+	 * const citations = extractCitations(text, {
+	 *   resolve: true,
+	 *   resolutionOptions: {
+	 *     scopeStrategy: 'paragraph',
+	 *     fuzzyPartyMatching: true
+	 *   }
+	 * })
+	 * ```
+	 */
+	resolutionOptions?: ResolutionOptions
 }
 
 /**
@@ -128,7 +163,7 @@ export interface ExtractOptions {
 export function extractCitations(
 	text: string,
 	options?: ExtractOptions,
-): Citation[] {
+): Citation[] | ResolvedCitation[] {
 	const startTime = performance.now()
 
 	// Step 1: Clean text
@@ -143,6 +178,7 @@ export function extractCitations(
 		...statutePatterns,
 		...journalPatterns,
 		...neutralPatterns,
+		...shortFormPatterns,
 	]
 	const tokens = tokenize(cleaned, allPatterns)
 
@@ -153,7 +189,16 @@ export function extractCitations(
 
 		switch (token.type) {
 			case 'case':
-				citation = extractCase(token, transformationMap)
+				// Check pattern ID to distinguish short-form from full citations
+				if (token.patternId === 'id' || token.patternId === 'ibid') {
+					citation = extractId(token, transformationMap)
+				} else if (token.patternId === 'supra') {
+					citation = extractSupra(token, transformationMap)
+				} else if (token.patternId === 'shortFormCase') {
+					citation = extractShortFormCase(token, transformationMap)
+				} else {
+					citation = extractCase(token, transformationMap)
+				}
 				break
 			case 'statute':
 				citation = extractStatute(token, transformationMap)
@@ -186,6 +231,11 @@ export function extractCitations(
 		citations.push(citation)
 	}
 
+	// Step 4: Resolve short-form citations if requested
+	if (options?.resolve) {
+		return resolveCitations(citations, text, options.resolutionOptions)
+	}
+
 	return citations
 }
 
@@ -202,19 +252,19 @@ export function extractCitations(
  * the synchronous version.
  *
  * @param text - Raw text to extract citations from
- * @param options - Optional customization (cleaners, patterns)
- * @returns Promise resolving to array of citations
+ * @param options - Optional customization (cleaners, patterns, resolve)
+ * @returns Promise resolving to array of citations (or ResolvedCitation[] if resolve: true)
  *
  * @example
  * ```typescript
- * const citations = await extractCitationsAsync(text)
- * // Identical to extractCitations(text)
+ * const citations = await extractCitationsAsync(text, { resolve: true })
+ * // Returns ResolvedCitation[] with resolution metadata
  * ```
  */
 export async function extractCitationsAsync(
 	text: string,
 	options?: ExtractOptions,
-): Promise<Citation[]> {
+): Promise<Citation[] | ResolvedCitation[]> {
 	// Async wrapper for future extensibility (e.g., async reporters-db lookup)
 	// For MVP, wraps synchronous extractCitations
 	return extractCitations(text, options)
