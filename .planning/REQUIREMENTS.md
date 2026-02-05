@@ -88,38 +88,38 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPAN-01 | — | Pending |
-| SPAN-02 | — | Pending |
-| SPAN-03 | — | Pending |
-| SPAN-04 | — | Pending |
-| SPAN-05 | — | Pending |
-| PARTY-01 | — | Pending |
-| PARTY-02 | — | Pending |
-| PARTY-03 | — | Pending |
-| PARTY-04 | — | Pending |
-| PARTY-05 | — | Pending |
-| BLANK-01 | — | Pending |
-| BLANK-02 | — | Pending |
-| BLANK-03 | — | Pending |
-| BLANK-04 | — | Pending |
-| PARA-01 | — | Pending |
-| PARA-02 | — | Pending |
-| PARA-03 | — | Pending |
-| PARA-04 | — | Pending |
-| PAREN-01 | — | Pending |
-| PAREN-02 | — | Pending |
-| PAREN-03 | — | Pending |
-| PAREN-04 | — | Pending |
-| QUAL-01 | — | Pending |
-| QUAL-02 | — | Pending |
-| QUAL-03 | — | Pending |
-| QUAL-04 | — | Pending |
+| QUAL-01 | Phase 5 | Pending |
+| BLANK-01 | Phase 5 | Pending |
+| BLANK-02 | Phase 5 | Pending |
+| BLANK-03 | Phase 5 | Pending |
+| BLANK-04 | Phase 5 | Pending |
+| SPAN-01 | Phase 6 | Pending |
+| SPAN-02 | Phase 6 | Pending |
+| SPAN-03 | Phase 6 | Pending |
+| SPAN-04 | Phase 6 | Pending |
+| PAREN-01 | Phase 6 | Pending |
+| PAREN-02 | Phase 6 | Pending |
+| PAREN-03 | Phase 6 | Pending |
+| PAREN-04 | Phase 6 | Pending |
+| PARTY-01 | Phase 7 | Pending |
+| PARTY-02 | Phase 7 | Pending |
+| PARTY-03 | Phase 7 | Pending |
+| PARTY-04 | Phase 7 | Pending |
+| PARTY-05 | Phase 7 | Pending |
+| PARA-01 | Phase 8 | Pending |
+| PARA-02 | Phase 8 | Pending |
+| PARA-03 | Phase 8 | Pending |
+| PARA-04 | Phase 8 | Pending |
+| SPAN-05 | Phase 8 | Pending |
+| QUAL-02 | Phase 8 | Pending |
+| QUAL-03 | Phase 8 | Pending |
+| QUAL-04 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26 ⚠️
+- Mapped to phases: 26
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after initial definition*
+*Last updated: 2026-02-05 after roadmap creation*
