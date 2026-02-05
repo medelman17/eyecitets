@@ -65,7 +65,6 @@ export function annotate(
   })
 
   let result = text
-  let shift = 0
   const positionMap = new Map<number, number>()
 
   for (const citation of sorted) {
@@ -83,7 +82,7 @@ export function annotate(
       markup = callback(citation, surrounding)
     } else if (template) {
       // Template mode: simple before/after wrapping
-      const citationText = text.substring(start, end)
+      const citationText = result.substring(start, end)
       const escaped = autoEscape ? escapeHtmlEntities(citationText) : citationText
       markup = template.before + escaped + template.after
     } else {
@@ -91,13 +90,11 @@ export function annotate(
       continue
     }
 
-    // Insert annotation (working backwards preserves positions)
-    const adjustedStart = start + shift
-    const adjustedEnd = end + shift
-    result = result.slice(0, adjustedStart) + markup + result.slice(adjustedEnd)
+    // Insert annotation (working backwards preserves positions for later citations)
+    result = result.slice(0, start) + markup + result.slice(end)
 
-    shift += markup.length - (end - start)
-    positionMap.set(start, adjustedStart)
+    // Track original position to new position (before this annotation was added)
+    positionMap.set(start, start)
   }
 
   return { text: result, positionMap, skipped: [] }
