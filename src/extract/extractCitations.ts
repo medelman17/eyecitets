@@ -173,18 +173,33 @@ export function extractCitations(
 	)
 
 	// Step 2: Tokenize (synchronous)
+	// Note: Pattern order matters for deduplication - more specific patterns first
 	const allPatterns = options?.patterns || [
-		...casePatterns,
-		...statutePatterns,
-		...journalPatterns,
-		...neutralPatterns,
-		...shortFormPatterns,
+		...neutralPatterns,      // Most specific (year-based format)
+		...shortFormPatterns,    // Short-form (requires " at " keyword)
+		...casePatterns,         // Case citations (reporter-specific)
+		...statutePatterns,      // Statutes (code-specific)
+		...journalPatterns,      // Least specific (broad pattern)
 	]
 	const tokens = tokenize(cleaned, allPatterns)
 
-	// Step 3: Extract citations from tokens
-	const citations: Citation[] = []
+	// Step 3: Deduplicate overlapping tokens
+	// Multiple patterns may match the same text (e.g., "500 F.2d 123" matches both federal-reporter and state-reporter)
+	// Keep only the most specific match for each position
+	const deduplicatedTokens: typeof tokens = []
+	const seenPositions = new Set<string>()
+
 	for (const token of tokens) {
+		const posKey = `${token.span.cleanStart}-${token.span.cleanEnd}`
+		if (!seenPositions.has(posKey)) {
+			seenPositions.add(posKey)
+			deduplicatedTokens.push(token)
+		}
+	}
+
+	// Step 4: Extract citations from deduplicated tokens
+	const citations: Citation[] = []
+	for (const token of deduplicatedTokens) {
 		let citation: Citation
 
 		switch (token.type) {
@@ -231,7 +246,7 @@ export function extractCitations(
 		citations.push(citation)
 	}
 
-	// Step 4: Resolve short-form citations if requested
+	// Step 5: Resolve short-form citations if requested
 	if (options?.resolve) {
 		return resolveCitations(citations, text, options.resolutionOptions)
 	}

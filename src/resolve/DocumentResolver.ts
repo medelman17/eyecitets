@@ -126,28 +126,29 @@ export class DocumentResolver {
   }
 
   /**
-   * Resolves Id. citation to immediately preceding full citation.
+   * Resolves Id. citation to immediately preceding full case citation.
    */
   private resolveId(citation: IdCitation): ResolutionResult | undefined {
     const currentIndex = this.context.citationIndex
 
-    // Check if we have a previous full citation
-    if (this.context.lastFullCitation === undefined) {
-      return this.createFailureResult('No preceding full citation found')
+    // Find most recent full case citation (Id. only resolves to case citations, not statutes/journals)
+    let antecedentIndex: number | undefined
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      const candidate = this.citations[i]
+      if (candidate.type === 'case') {
+        antecedentIndex = i
+        break
+      }
     }
 
-    const antecedentIndex = this.context.lastFullCitation
+    // Check if we have a previous case citation
+    if (antecedentIndex === undefined) {
+      return this.createFailureResult('No preceding full case citation found')
+    }
 
     // Check scope boundary
     if (!this.isWithinScope(antecedentIndex, currentIndex)) {
       return this.createFailureResult('Antecedent citation outside scope boundary')
-    }
-
-    // Check if antecedent is a full citation
-    const antecedent = this.citations[antecedentIndex]
-    if (!this.isFullCitation(antecedent)) {
-      // This can happen if allowNestedResolution is false and last citation was also Id.
-      return this.createFailureResult('Previous citation is not a full citation')
     }
 
     return {
@@ -275,20 +276,28 @@ export class DocumentResolver {
 
   /**
    * Extracts party name from full case citation text.
-   * Handles "Party v. Party" format.
+   * Handles "Party v. Party" format by looking at text before citation span.
    */
   private extractPartyName(citation: FullCaseCitation): string | undefined {
-    // Try to extract first party name from citation text
-    // Format: "Party v. Party, Volume Reporter Page"
-    const vMatch = citation.text.match(/^([^,]+?)\s+v\.?\s+/)
+    // Look at text before citation span to find party names
+    // Case citations typically appear as: "Smith v. Jones, 100 F.2d 10"
+    // But tokenizer only captures "100 F.2d 10" - we need to look backwards in text
+
+    const citationStart = citation.span.originalStart
+    // Look backwards up to 100 characters for party name
+    const lookbackStart = Math.max(0, citationStart - 100)
+    const beforeText = this.text.substring(lookbackStart, citationStart)
+
+    // Match pattern: "FirstParty v. SecondParty, " before the citation
+    // Capture the first party name (handles single-letter party names like "A" or "B")
+    const vMatch = beforeText.match(/([A-Z][a-zA-Z]*(?:\s+[A-Z][a-zA-Z]*)*)\s+v\.?\s+[A-Z][a-zA-Z]*(?:\s+[A-Z][a-zA-Z]*)*,\s*$/)
     if (vMatch) {
       return vMatch[1].trim()
     }
 
-    // If no "v." found, try to extract first capitalized word(s) before comma
-    const beforeComma = citation.text.split(',')[0]
-    const capitalizedMatch = beforeComma?.match(/\b[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*/)
-    return capitalizedMatch?.[0]
+    // Fallback: try to find any capitalized word(s) before comma
+    const beforeComma = beforeText.match(/([A-Z][a-zA-Z]*(?:\s+[A-Z][a-zA-Z]*)*),\s*$/)
+    return beforeComma?.[1].trim()
   }
 
   /**
