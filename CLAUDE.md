@@ -39,7 +39,8 @@ The `Span` type carries dual positions: `cleanStart/cleanEnd` (for internal pars
 
 ### Type System
 
-Citations use a discriminated union on the `type` field: `case | statute | journal | neutral | publicLaw | federalRegister | id | supra | shortFormCase`. All share `CitationBase` (text, span, confidence, matchedText, processTimeMs). Switch on `citation.type` for type-safe field access.
+Citations use a discriminated union on the `type` field: `case | statute | journal | neutral | publicLaw | federalRegister | statutesAtLarge | id | supra | shortFormCase`. All share `CitationBase` (text, span, confidence, matchedText, processTimeMs). Switch on `citation.type` for type-safe field access.
+- Volume is `number | string` — numeric for standard volumes, string for hyphenated (e.g., "1984-1")
 
 ### Entry Points
 
@@ -71,3 +72,4 @@ Tests mirror source in `tests/` with the same directory structure. Integration t
 - **Coverage**: Vitest `--coverage` requires Node 20+ (`node:inspector/promises`). CI only runs coverage on Node 22.
 - **Releases**: Changesets — `pnpm changeset` to add, merge to main creates "Version Packages" PR, merging that publishes to npm with provenance
 - **Package manager**: pnpm 10 via corepack. Build script allowlist in `pnpm-workspace.yaml`.
+- Each fix/feature branch needs a changeset: `pnpm changeset` → select patch/minor/major → write summary
