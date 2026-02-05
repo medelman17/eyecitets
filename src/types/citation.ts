@@ -65,6 +65,47 @@ export interface FullCaseCitation extends CitationBase {
   pincite?: number
   court?: string
   year?: number
+
+  /** Normalized reporter abbreviation from reporters-db (e.g., "F.2d" vs "F. 2d") */
+  normalizedReporter?: string
+
+  /** Parallel citations for same case in different reporters */
+  parallelCitations?: Array<{
+    volume: number
+    reporter: string
+    page: number
+  }>
+
+  /** Citation signal (introductory phrase) */
+  signal?: 'see' | 'see also' | 'cf' | 'but see' | 'compare'
+
+  /** Parenthetical explanation following the citation */
+  parenthetical?: string
+
+  /** Subsequent procedural history (e.g., "aff'd", "rev'd", "cert. denied") */
+  subsequentHistory?: string
+
+  /**
+   * Date information in multiple formats.
+   * - iso: ISO 8601 format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ssZ)
+   * - parsed: Structured date components
+   */
+  date?: {
+    iso: string
+    parsed?: { year: number; month?: number; day?: number }
+  }
+
+  /**
+   * Alternative interpretations for ambiguous citations.
+   * Used when reporter abbreviation matches multiple reporters or format is unclear.
+   */
+  possibleInterpretations?: Array<{
+    volume: number
+    reporter: string
+    page: number
+    confidence: number
+    reason: string
+  }>
 }
 
 /**
