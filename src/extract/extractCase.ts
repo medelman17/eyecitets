@@ -70,19 +70,33 @@ function extractCaseName(
 	maxLookback = 150,
 ): { caseName: string; nameStart: number } | undefined {
 	const searchStart = Math.max(0, coreStart - maxLookback)
-	const precedingText = cleanedText.substring(searchStart, coreStart)
+	let precedingText = cleanedText.substring(searchStart, coreStart)
+	let adjustedSearchStart = searchStart
+
+	// Split at last sentence boundary to avoid crossing citation boundaries
+	// Find last occurrence of ". " followed by a capital letter or digit (start of new sentence/citation)
+	const sentenceBoundaryRegex = /\.\s+(?=[A-Z0-9])/g
+	let lastBoundaryIndex = -1
+	let match: RegExpExecArray | null
+	while ((match = sentenceBoundaryRegex.exec(precedingText)) !== null) {
+		lastBoundaryIndex = match.index + match[0].length
+	}
+
+	if (lastBoundaryIndex !== -1) {
+		precedingText = precedingText.substring(lastBoundaryIndex)
+		adjustedSearchStart = searchStart + lastBoundaryIndex
+	}
 
 	// Priority 1: Standard "v." or "vs." format with comma before citation
 	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens, slashes
-	// Stop at semicolon (multi-citation separator)
 	const vRegex =
 		/([A-Z][A-Za-z0-9\s.,'&()/-]+?)\s+v(?:s)?\.?\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/
 	const vMatch = vRegex.exec(precedingText)
 	if (vMatch) {
-		// Check for semicolon in matched text (would indicate crossing citation boundary)
+		// Check for semicolon in matched text (multi-citation separator)
 		if (!vMatch[0].includes(';')) {
 			const caseName = `${vMatch[1].trim()} v. ${vMatch[2].trim()}`
-			const nameStart = searchStart + vMatch.index
+			const nameStart = adjustedSearchStart + vMatch.index
 			return { caseName, nameStart }
 		}
 	}
@@ -92,9 +106,10 @@ function extractCaseName(
 		/\b(In re|Ex parte|Matter of|Estate of|State ex rel\.|United States ex rel\.|Application of|Petition of)\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/i
 	const procMatch = procRegex.exec(precedingText)
 	if (procMatch) {
+		// Check for semicolon in matched text (multi-citation separator)
 		if (!procMatch[0].includes(';')) {
 			const caseName = `${procMatch[1]} ${procMatch[2].trim()}`
-			const nameStart = searchStart + procMatch.index
+			const nameStart = adjustedSearchStart + procMatch.index
 			return { caseName, nameStart }
 		}
 	}
