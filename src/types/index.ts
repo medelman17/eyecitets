@@ -4,6 +4,7 @@ export type {
   CitationType,
   CitationBase,
   CitationOfType,
+  ExtractorMap,
   FullCaseCitation,
   StatuteCitation,
   JournalCitation,
@@ -19,4 +20,4 @@ export type {
   ShortFormCitation,
   Warning
 } from "./citation"
-export { isFullCitation, isShortFormCitation, isCaseCitation, assertUnreachable } from "./guards"
+export { isFullCitation, isShortFormCitation, isCaseCitation, isCitationType, assertUnreachable } from "./guards"

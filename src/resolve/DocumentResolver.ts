@@ -116,11 +116,12 @@ export class DocumentResolver {
           break
       }
 
-      // Add citation with optional resolution metadata
+      // Add citation with resolution metadata
+      // Type assertion is safe: runtime logic only sets resolution on short-form citations
       resolved.push({
         ...citation,
         resolution,
-      })
+      } as ResolvedCitation)
     }
 
     return resolved

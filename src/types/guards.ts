@@ -1,4 +1,4 @@
-import type { Citation, FullCitation, ShortFormCitation, FullCaseCitation } from "./citation"
+import type { Citation, CitationType, CitationOfType, FullCitation, ShortFormCitation, FullCaseCitation } from "./citation"
 
 /**
  * Type guard: narrows Citation to a full citation (case, statute, journal, neutral, publicLaw, federalRegister).
@@ -26,6 +26,17 @@ export function isShortFormCitation(citation: Citation): citation is ShortFormCi
  */
 export function isCaseCitation(citation: Citation): citation is FullCaseCitation {
   return citation.type === 'case'
+}
+
+/**
+ * Generic type guard that narrows a Citation to a specific type.
+ * Useful when the target type is dynamic or generic.
+ */
+export function isCitationType<T extends CitationType>(
+  citation: Citation,
+  type: T
+): citation is CitationOfType<T> {
+  return citation.type === type
 }
 
 /**

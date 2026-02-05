@@ -295,3 +295,11 @@ export type ShortFormCitation = IdCitation | SupraCitation | ShortFormCaseCitati
  * ```
  */
 export type CitationOfType<T extends CitationType> = Extract<Citation, { type: T }>
+
+/**
+ * Maps each full citation type to its concrete Citation subtype.
+ * Useful for generic code building custom extraction pipelines.
+ */
+export type ExtractorMap = {
+  [K in FullCitationType]: CitationOfType<K>
+}

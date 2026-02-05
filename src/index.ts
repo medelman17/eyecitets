@@ -32,6 +32,7 @@ export type {
 	CitationType,
 	CitationBase,
 	CitationOfType,
+	ExtractorMap,
 	FullCaseCitation,
 	StatuteCitation,
 	JournalCitation,
@@ -48,7 +49,7 @@ export type {
 	Warning,
 } from './types'
 
-export { isFullCitation, isShortFormCitation, isCaseCitation, assertUnreachable } from './types'
+export { isFullCitation, isShortFormCitation, isCaseCitation, isCitationType, assertUnreachable } from './types'
 
 // ============================================================================
 // Main API (Phase 2) - Convenience Functions

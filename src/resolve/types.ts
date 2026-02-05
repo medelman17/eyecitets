@@ -5,7 +5,7 @@
  * and resolves short-form citations (Id./supra/short-form case) to their full forms.
  */
 
-import type { Citation } from '../types/citation'
+import type { Citation, ShortFormCitation } from '../types/citation'
 
 /**
  * Scope boundary strategy for resolution.
@@ -93,16 +93,16 @@ export interface ResolutionResult {
 }
 
 /**
- * Citation with optional resolution metadata.
- * Uses intersection type to add resolution field to any Citation type.
+ * Citation with resolution metadata.
+ *
+ * Uses a distributive conditional type so that `resolution` is only
+ * meaningfully present on short-form citations (Id., supra, short-form case).
+ * On full citations, `resolution` is typed as `undefined`.
  */
-export type ResolvedCitation = Citation & {
-  /**
-   * Resolution result for short-form citations.
-   * Only present for Id/supra/shortFormCase types
-   */
-  resolution?: ResolutionResult
-}
+export type ResolvedCitation<C extends Citation = Citation> =
+  C extends ShortFormCitation
+    ? C & { resolution: ResolutionResult | undefined }
+    : C & { resolution?: undefined }
 
 /**
  * Internal context for resolution process.
