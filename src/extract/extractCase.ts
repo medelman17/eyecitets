@@ -70,31 +70,47 @@ function extractCaseName(
 	maxLookback = 150,
 ): { caseName: string; nameStart: number } | undefined {
 	const searchStart = Math.max(0, coreStart - maxLookback)
-	const precedingText = cleanedText.substring(searchStart, coreStart)
+	let precedingText = cleanedText.substring(searchStart, coreStart)
+	let adjustedSearchStart = searchStart
 
-	// Priority 1: Standard "v." format with comma before citation
-	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens
-	// Stop at semicolon (multi-citation separator)
+	// Split at last sentence boundary to avoid crossing citation boundaries
+	// Find last occurrence of digit-period-space pattern (end of reporter page like "10. Jones")
+	// This is more specific than generic ". [A-Z]" which would match "v." or "United States v."
+	const citationBoundaryRegex = /\d\.\s+/g
+	let lastBoundaryIndex = -1
+	let match: RegExpExecArray | null
+	while ((match = citationBoundaryRegex.exec(precedingText)) !== null) {
+		lastBoundaryIndex = match.index + match[0].length
+	}
+
+	if (lastBoundaryIndex !== -1) {
+		precedingText = precedingText.substring(lastBoundaryIndex)
+		adjustedSearchStart = searchStart + lastBoundaryIndex
+	}
+
+	// Priority 1: Standard "v." or "vs." format with comma before citation
+	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens, slashes
 	const vRegex =
-		/([A-Z][A-Za-z0-9\s.,'&()-]+?)\s+v\.?\s+([A-Za-z0-9\s.,'&()-]+?)\s*,\s*$/
+		/([A-Z][A-Za-z0-9\s.,'&()/-]+?)\s+v(?:s)?\.?\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/
 	const vMatch = vRegex.exec(precedingText)
 	if (vMatch) {
-		// Check for semicolon in matched text (would indicate crossing citation boundary)
+		// Check for semicolon in matched text (multi-citation separator)
 		if (!vMatch[0].includes(';')) {
 			const caseName = `${vMatch[1].trim()} v. ${vMatch[2].trim()}`
-			const nameStart = searchStart + vMatch.index
+			const nameStart = adjustedSearchStart + vMatch.index
 			return { caseName, nameStart }
 		}
 	}
 
-	// Priority 2: Procedural prefixes
+	// Priority 2: Procedural prefixes (including Estate of)
 	const procRegex =
-		/\b(In re|Ex parte|Matter of)\s+([A-Za-z0-9\s.,'&()-]+?)\s*,\s*$/i
+		/\b(In re|Ex parte|Matter of|Estate of|State ex rel\.|United States ex rel\.|Application of|Petition of)\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/i
 	const procMatch = procRegex.exec(precedingText)
 	if (procMatch) {
+		// Check for semicolon in matched text (multi-citation separator)
 		if (!procMatch[0].includes(';')) {
 			const caseName = `${procMatch[1]} ${procMatch[2].trim()}`
-			const nameStart = searchStart + procMatch.index
+			const nameStart = adjustedSearchStart + procMatch.index
 			return { caseName, nameStart }
 		}
 	}
@@ -228,6 +244,152 @@ function parseParenthetical(content: string): {
 	}
 
 	return result
+}
+
+/**
+ * Normalize party name for matching by removing legal noise.
+ * Normalization pipeline:
+ * 1. Strip "et al." (case-insensitive)
+ * 2. Strip "d/b/a" and everything after (case-insensitive)
+ * 3. Strip "aka" and everything after (case-insensitive, word boundary)
+ * 4. Strip trailing corporate suffixes (Inc., LLC, Corp., Ltd., Co., LLP, LP, P.C.) - iterative
+ * 5. Strip leading articles (The, A, An)
+ * 6. Normalize whitespace
+ * 7. Trim and lowercase
+ *
+ * @param name - Raw party name
+ * @returns Normalized party name
+ *
+ * @example
+ * ```typescript
+ * normalizePartyName("The Smith Corp., Inc.") // "smith"
+ * normalizePartyName("Doe et al.") // "doe"
+ * normalizePartyName("United States") // "united states" (not stripped)
+ * ```
+ */
+function normalizePartyName(name: string): string {
+	let normalized = name
+
+	// Strip "et al." (with or without period, case-insensitive)
+	normalized = normalized.replace(/\bet\s+al\.?/gi, '')
+
+	// Strip "d/b/a" and everything after it (case-insensitive)
+	normalized = normalized.replace(/\s+d\/b\/a\b.*/gi, '')
+
+	// Strip "aka" and everything after it (case-insensitive, word boundary)
+	normalized = normalized.replace(/\s+aka\b.*/gi, '')
+
+	// Strip trailing corporate suffixes (with or without trailing period, handle comma)
+	// Repeat to handle multiple suffixes like "Corp., Inc."
+	let prev = ''
+	while (prev !== normalized) {
+		prev = normalized
+		normalized = normalized.replace(/,?\s*(Inc|LLC|Corp|Ltd|Co|LLP|LP|P\.C)\.?$/gi, '')
+	}
+
+	// Strip leading articles (only at start)
+	normalized = normalized.replace(/^(The|A|An)\s+/i, '')
+
+	// Normalize whitespace (collapse multiple spaces)
+	normalized = normalized.replace(/\s+/g, ' ')
+
+	// Trim and lowercase
+	return normalized.trim().toLowerCase()
+}
+
+/**
+ * Extract plaintiff and defendant party names from case name.
+ * Handles adversarial cases (v.) and procedural prefixes (In re, Ex parte, etc.).
+ *
+ * @param caseName - Case name string
+ * @returns Party name data with raw and normalized fields
+ *
+ * @example
+ * ```typescript
+ * extractPartyNames("Smith v. Jones")
+ * // Returns: { plaintiff: "Smith", plaintiffNormalized: "smith", defendant: "Jones", defendantNormalized: "jones" }
+ *
+ * extractPartyNames("In re Smith")
+ * // Returns: { plaintiff: "In re Smith", plaintiffNormalized: "smith", proceduralPrefix: "In re" }
+ *
+ * extractPartyNames("People v. Smith")
+ * // Returns: { plaintiff: "People", plaintiffNormalized: "people", defendant: "Smith", defendantNormalized: "smith" }
+ * ```
+ */
+function extractPartyNames(caseName: string): {
+	plaintiff?: string
+	plaintiffNormalized?: string
+	defendant?: string
+	defendantNormalized?: string
+	proceduralPrefix?: string
+} {
+	// Procedural prefix patterns (anchored to start, case-insensitive)
+	const proceduralPrefixes = [
+		'In re',
+		'Ex parte',
+		'Matter of',
+		'State ex rel.',
+		'United States ex rel.',
+		'Application of',
+		'Petition of',
+		'Estate of',
+	]
+
+	// Check for procedural prefix first
+	for (const prefix of proceduralPrefixes) {
+		const prefixRegex = new RegExp(`^(${prefix})\\s+(.+)$`, 'i')
+		const match = prefixRegex.exec(caseName)
+		if (match) {
+			const matchedPrefix = match[1]
+			const subject = match[2]
+
+			// Check if there's a "v." after the prefix (adversarial case)
+			if (/\s+v\.?\s+/i.test(subject)) {
+				// Adversarial case with procedural-looking plaintiff (e.g., "Estate of X v. Y")
+				// Split on "v."
+				const vMatch = /^(.+?)\s+v\.?\s+(.+)$/i.exec(caseName)
+				if (vMatch) {
+					const plaintiff = vMatch[1].trim()
+					const defendant = vMatch[2].trim()
+					return {
+						plaintiff,
+						plaintiffNormalized: normalizePartyName(plaintiff),
+						defendant,
+						defendantNormalized: normalizePartyName(defendant),
+					}
+				}
+			} else {
+				// Pure procedural (no "v.")
+				return {
+					plaintiff: caseName,
+					plaintiffNormalized: normalizePartyName(subject),
+					proceduralPrefix: matchedPrefix,
+				}
+			}
+		}
+	}
+
+	// Split on "v." for adversarial cases
+	const vRegex = /^(.+?)\s+v\.?\s+(.+)$/i
+	const vMatch = vRegex.exec(caseName)
+	if (vMatch) {
+		let plaintiff = vMatch[1].trim()
+		const defendant = vMatch[2].trim()
+
+		// Strip signal words from plaintiff (e.g., "In Smith" → "Smith", "See Jones" → "Jones")
+		// Preserve "In re" which is a procedural prefix, not a signal word
+		plaintiff = plaintiff.replace(/^(?:In(?!\s+re\b)|See(?:\s+[Aa]lso)?|Compare|But(?:\s+[Ss]ee)?|Cf\.?|Also)\s+/i, '').trim()
+
+		return {
+			plaintiff: plaintiff || vMatch[1].trim(), // Fallback to original if strip leaves nothing
+			plaintiffNormalized: normalizePartyName(plaintiff || vMatch[1].trim()),
+			defendant,
+			defendantNormalized: normalizePartyName(defendant),
+		}
+	}
+
+	// No "v." and no procedural prefix - no parties extracted
+	return {}
 }
 
 /**
@@ -405,6 +567,22 @@ export function extractCase(
 		}
 	}
 
+	// Phase 7: Extract party names from case name
+	let plaintiff: string | undefined
+	let plaintiffNormalized: string | undefined
+	let defendant: string | undefined
+	let defendantNormalized: string | undefined
+	let proceduralPrefix: string | undefined
+
+	if (caseName) {
+		const partyResult = extractPartyNames(caseName)
+		plaintiff = partyResult.plaintiff
+		plaintiffNormalized = partyResult.plaintiffNormalized
+		defendant = partyResult.defendant
+		defendantNormalized = partyResult.defendantNormalized
+		proceduralPrefix = partyResult.proceduralPrefix
+	}
+
 	// Translate positions from clean → original (citation core only - span unchanged)
 	const originalStart =
 		transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
@@ -488,5 +666,10 @@ export function extractCase(
 		fullSpan,
 		caseName,
 		disposition,
+		plaintiff,
+		plaintiffNormalized,
+		defendant,
+		defendantNormalized,
+		proceduralPrefix,
 	}
 }

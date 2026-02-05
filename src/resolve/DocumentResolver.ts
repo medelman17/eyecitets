@@ -247,14 +247,27 @@ export class DocumentResolver {
   /**
    * Tracks a full citation in the resolution history.
    * Extracts party name for supra resolution.
+   * Uses extracted party names (Phase 7) when available, falls back to backward search.
    */
   private trackFullCitation(citation: Citation, index: number): void {
     // Only case citations have party names for supra resolution
     if (citation.type === 'case') {
-      const partyName = this.extractPartyName(citation)
-      if (partyName) {
-        const normalized = this.normalizePartyName(partyName)
-        this.context.fullCitationHistory.set(normalized, index)
+      // Phase 7: Use extracted party names when available
+      // Defendant name stored first (preferred for Bluebook-style supra matching)
+      if (citation.defendantNormalized) {
+        this.context.fullCitationHistory.set(citation.defendantNormalized, index)
+      }
+      if (citation.plaintiffNormalized) {
+        this.context.fullCitationHistory.set(citation.plaintiffNormalized, index)
+      }
+
+      // Fallback: backward search from text (pre-Phase 7 compatibility)
+      if (!citation.plaintiffNormalized && !citation.defendantNormalized) {
+        const partyName = this.extractPartyName(citation)
+        if (partyName) {
+          const normalized = this.normalizePartyName(partyName)
+          this.context.fullCitationHistory.set(normalized, index)
+        }
       }
     }
   }

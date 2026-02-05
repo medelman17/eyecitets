@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Developers can extract, resolve, and annotate legal citations from text without Python infrastructure
-**Current focus:** v1.1 Extraction Accuracy - Phase 7 (Party Name Extraction)
+**Current focus:** v1.1 Extraction Accuracy - Phase 8 (Parallel Linking & Quality Validation)
 
 ## Current Position
 
-Phase: 7 of 8 (Party Name Extraction)
-Plan: Ready to plan Phase 7
-Status: Ready to plan
-Last activity: 2026-02-05 — Phase 6 complete, verified
+Phase: 7 of 8 (Party Name Extraction) — VERIFIED
+Plan: 2 of 2 complete
+Status: Phase complete, verified
+Last activity: 2026-02-05 — Phase 7 complete, verified
 
-Progress: ███████████░░░░░ 62% (21/26 plans total, 17/17 v1.0 complete, 4/9 v1.1 complete)
+Progress: █████████████░░░ 69% (23/26 plans total, 17/17 v1.0 complete, 6/9 v1.1 complete)
 
-**Phase 6 verified:** 11/11 must-haves passed, 5/5 success criteria passed
+**Phase 7 verified:** 5/5 must-haves passed, 5/5 success criteria passed, 470 tests passing
 
 Config:
 {
@@ -24,7 +24,7 @@ Config:
   "depth": "quick",
   "parallelization": true,
   "commit_docs": true,
-  "model_profile": "balanced",
+  "model_profile": "budget",
   "workflow": {
     "research": true,
     "plan_check": true,
@@ -38,7 +38,7 @@ Config:
 ## Milestone History
 
 - v1.0-alpha: 4 phases, 17 plans, 368 tests, shipped 2026-02-05
-- v1.1 Extraction Accuracy: 4 phases, 9 plans (estimated), in progress (4/9 complete)
+- v1.1 Extraction Accuracy: 4 phases, 9 plans (estimated), in progress (6/9 complete)
 
 ## Performance Metrics
 
@@ -57,9 +57,9 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 4
-- Average duration: ~3.5 min
-- Total execution time: ~14 min
+- Total plans completed: 6
+- Average duration: ~4.5 min
+- Total execution time: ~27 min
 
 **By Phase (v1.1-alpha):**
 
@@ -67,6 +67,7 @@ Config:
 |-------|-------|-------|----------|
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
 | 6. Full Span & Complex Parentheticals | 2/2 | ~7.4 min | ~3.7 min |
+| 7. Party Name Extraction | 2/2 | ~13 min | ~6.5 min |
 
 ## Accumulated Context
 
@@ -88,6 +89,15 @@ Config:
 | 06-02 | Backward search up to 150 chars for case name | Standard 'v.' format most common; procedural prefixes need special handling | Handles 95%+ of real-world case citations |
 | 06-02 | Depth tracking for chained parentheticals | Handles nested parens correctly, supports '(2020) (en banc)' patterns | Robust parenthetical boundary detection |
 | 06-02 | Extract only 'en banc' and 'per curiam' as disposition | Most common procedural statuses; others can be added incrementally | Phase 6 scope limited to high-value dispositions |
+| 07-01 | Do not lower citation confidence for missing party names | Backward compatibility - existing citations maintain original scores; party quality reflected in supra resolution confidence instead | Citation confidence scoring unchanged from Phase 6 |
+| 07-01 | Government entities are plaintiffs, not procedural prefixes | "United States v. Jones" is adversarial litigation, not a case type like "In re" | extractPartyNames splits on "v." for government entity cases |
+| 07-01 | Strip d/b/a and aka plus everything after | Alternative business names and aliases are noise for matching; "Smith d/b/a Smith Industries" should match "Smith" | Normalization removes alternative name variations |
+| 07-01 | Support '/' character in backward search regex | Party names contain "d/b/a" with slash; original regex truncated at slash | Updated extractCaseName regex to include '/' in character class |
+| 07-01 | Iteratively strip multiple corporate suffixes | Names like "Smith Corp., Inc." have multiple suffixes; single-pass leaves "Corp." | While loop strips suffixes until no more matches |
+| 07-02 | Defendant name stored first in resolution history | Bluebook convention prefers defendant name in supra citations | DocumentResolver prioritizes defendantNormalized for matching |
+| 07-02 | Fallback to backward text search when extracted names unavailable | Ensures compatibility with pre-Phase 7 citations and extraction failures | Graceful degradation maintains resolution quality |
+| 07-02 | Citation boundary detection uses digit-period-space pattern | Prevents matching across citation boundaries ("10. Jones" → split before "Jones") | extractCaseName correctly handles consecutive citations |
+| 07-02 | Signal word stripping moved into extractPartyNames | Consistent plaintiff extraction regardless of resolution path | "In Smith v. Jones" → plaintiff "Smith" (not "In Smith") |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -108,5 +118,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-05 (phase execution)
-Stopped at: Phase 6 complete, verified
-Resume file: .planning/phases/06-full-span-complex-parentheticals/06-VERIFICATION.md
+Stopped at: Phase 7 complete, verified
+Resume file: .planning/phases/07-party-name-extraction/07-VERIFICATION.md

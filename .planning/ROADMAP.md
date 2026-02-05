@@ -98,11 +98,11 @@ Plans:
   3. Government entities like "United States" recognized as plaintiffs
   4. Supra resolution uses party names for improved matching (fixes #21)
   5. Confidence scoring reflects party name extraction quality
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [x] 07-01-PLAN.md — Party name extraction (types, extractPartyNames, normalization, tests)
+- [x] 07-02-PLAN.md — Augment supra resolution with party name matching
 
 #### Phase 8: Parallel Linking & Quality Validation
 **Goal**: Link parallel citations sharing a parenthetical and validate quality targets
@@ -124,7 +124,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 5 → 6 → 7 → 8
+Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -134,5 +134,5 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 4. Resolution & Annotation | v1.0-alpha | 6/6 | Complete | 2026-02-05 |
 | 5. Type System & Blank Pages | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 6. Full Span & Complex Parentheticals | v1.1 | 2/2 | Complete | 2026-02-05 |
-| 7. Party Name Extraction | v1.1 | 0/2 | Not started | - |
+| 7. Party Name Extraction | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 8. Parallel Linking & Quality Validation | v1.1 | 0/2 | Not started | - |
