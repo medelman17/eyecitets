@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2025-02-04)
 
 **Core value:** Developers can extract, resolve, and annotate legal citations from text without Python infrastructure
-**Current focus:** Phase 1 - Foundation & Architecture
+**Current focus:** Phase 2 - Core Parsing
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Architecture)
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-02-05 — Completed 01-02-PLAN.md (build tooling configuration)
+Phase: 2 of 4 (Core Parsing)
+Plan: 2 of 6 complete
+Status: In progress
+Last activity: 2026-02-05 — Completed 02-02-PLAN.md (citation regex patterns with ReDoS protection)
 
-Progress: [█████████░] 100%
+Progress: [███░░░░░░░] 33%
 
-## Phase 1 Plans
+## Phase 1 Plans (Complete)
 
 | Plan | Wave | Description | Status |
 |------|------|-------------|--------|
@@ -24,22 +24,34 @@ Progress: [█████████░] 100%
 | 01-03 | 2 | Type system (Span, Citation), src/index.ts, ARCHITECTURE.md | Complete ✅ |
 | 01-02 | 3 | Build tooling (tsdown, Biome, Vitest configs) | Complete ✅ |
 
+## Phase 2 Plans (In Progress)
+
+| Plan | Wave | Description | Status |
+|------|------|-------------|--------|
+| 02-01 | 1 | Text cleaners (HTML stripping, Unicode normalization, whitespace) | Not started |
+| 02-02 | 1 | Citation regex patterns (case, statute, journal, neutral) with ReDoS protection | Complete ✅ |
+| 02-03 | 2 | Tokenizer (pattern matching, candidate extraction) | Not started |
+| 02-04 | 2 | TransformationMap implementation (position tracking) | Not started |
+| 02-05 | 3 | Citation extraction and metadata parsing | Not started |
+| 02-06 | 3 | End-to-end parsing tests | Not started |
+
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 80s
-- Total execution time: 0.07 hours
+- Total plans completed: 4
+- Average duration: 113s
+- Total execution time: 0.13 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | Phase 1 | 3/3 | 4 min | 80s |
+| Phase 2 | 2/6 | 7 min | 214s |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (1min), 01-03 (2min), 01-02 (1min)
-- Trend: Fast, consistent execution
+- Last 5 plans: 01-01 (80s), 01-03 (120s), 01-02 (60s), 02-02 (214s)
+- Trend: Phase 2 plans taking longer (more complex implementation)
 
 *Updated after each plan completion*
 
@@ -81,6 +93,15 @@ Recent decisions affecting current work:
 | TEST-01 | 10-second Vitest timeout | Enables Phase 2 ReDoS performance validation (<100ms per citation) |
 | TEST-02 | Exclude src/types/** from coverage | Type definition files don't need test coverage |
 
+**From 02-02 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| PATTERN-01 | Broad patterns for tokenization, validation in extraction layer | Tokenizer finds candidates quickly; extraction validates against reporters-db |
+| PATTERN-02 | Simple regex structure without nested quantifiers | Prevents ReDoS - all patterns <100ms on pathological input (validated: 2ms) |
+| PATTERN-03 | Individual named exports (casePatterns, statutePatterns, etc.) | Better tree-shaking, clearer API, modular imports |
+| CONFIG-01 | Add path aliases (@/*) to tsconfig and vitest config | Clean imports in tests without relative paths |
+
 ### Pending Todos
 
 None yet.
@@ -88,14 +109,18 @@ None yet.
 ### Blockers/Concerns
 
 **From Research (SUMMARY.md):**
-- Phase 1: Regex pattern audit needed — inventory all Python eyecite patterns, flag ES incompatibilities
 - Phase 1: Bundle strategy decision required — inline vs. tree-shake vs. CDN for reporters (affects architecture)
-- Phase 2: ReDoS testing infrastructure — integrate analyzer, establish baseline (<100ms per citation)
+- Phase 2: ✅ ReDoS testing infrastructure — COMPLETE (02-02: all patterns <100ms, validated with pathological inputs)
 - Phase 3: Reporter database optimization — measure tree-shaking vs. compression trade-offs with actual bundle
 - Phase 3: Position accuracy validation — requires access to diverse legal document corpus with HTML/Unicode
 
+**From 02-02 execution:**
+- State reporter and journal patterns are very broad - will produce false positives (validated by extraction layer in Plan 02-05)
+- No pincite support yet (e.g., "500 F.2d 123, 125") - out of scope for tokenization patterns
+- No short-form citation support yet (Id., supra, etc.) - requires context, may add in later phases
+
 ## Session Continuity
 
-Last session: 2026-02-05 (01-02 execution)
-Stopped at: Completed 01-02-PLAN.md - Phase 1 complete
-Resume file: None (Phase 1 Foundation & Architecture complete)
+Last session: 2026-02-05 (02-02 execution)
+Stopped at: Completed 02-02-PLAN.md - Citation regex patterns with ReDoS protection
+Resume file: None
