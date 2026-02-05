@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 6 of 8 (Full Span & Complex Parentheticals)
-Plan: Ready to plan Phase 6
-Status: Ready to plan
-Last activity: 2026-02-05 — Phase 5 complete, verified
+Plan: 1 of 3
+Status: In progress
+Last activity: 2026-02-05 — Completed 06-01-PLAN.md
 
-Progress: █████████░░░░░░░ 54% (19/26 plans total, 17/17 v1.0 complete, 2/9 v1.1 complete)
+Progress: ██████████░░░░░░ 58% (20/26 plans total, 17/17 v1.0 complete, 3/9 v1.1 complete)
 
 **Phase 5 verified:** 4/4 success criteria passed
 
@@ -57,15 +57,16 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 2
-- Average duration: ~2.5 min
-- Total execution time: ~5 min
+- Total plans completed: 3
+- Average duration: ~2.3 min
+- Total execution time: ~7 min
 
 **By Phase (v1.1-alpha):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
+| 6. Full Span & Complex Parentheticals | 1/3 | ~2 min | ~2 min |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Config:
 | 05-02 | Require 3+ chars for blank placeholders | Single dash/underscore could be legitimate text | Avoids false positives while matching real patterns |
 | 05-02 | Use lookahead instead of word boundary | Dash is non-word char, \b doesn't work after it | Enables dash placeholder matching |
 | 05-02 | Override confidence to 0.8 for blank pages | Blank pages are structurally valid but semantically incomplete | Consistent signal to consumers about missing page info |
+| 06-01 | Use lowercase keys in MONTH_MAP | Single normalize step (lowercase + strip period) enables simple lookup | Case-insensitive month matching with minimal code |
+| 06-01 | Year-only fallback for partial dates | Patterns require complete month+day+year triplets | Partial dates (month without day) treated as year-only |
+| 06-01 | ISO format varies by granularity | Preserves maximum available precision without inventing missing data | Consumer can check parsed.day/month to determine precision |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -98,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 13:31 (plan execution)
-Stopped at: Completed 05-02-PLAN.md (Phase 5 complete)
-Resume file: .planning/phases/05-type-system-blank-pages/05-02-SUMMARY.md
+Last session: 2026-02-05 14:23 (plan execution)
+Stopped at: Completed 06-01-PLAN.md
+Resume file: .planning/phases/06-full-span-complex-parentheticals/06-01-SUMMARY.md
