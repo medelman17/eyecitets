@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2025-02-04)
 ## Current Position
 
 Phase: 4 of 4 (Short-form Resolution)
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In progress
-Last activity: 2026-02-05 — Completed 04-01-PLAN.md (short-form citation types and patterns)
+Last activity: 2026-02-05 — Completed 04-02-PLAN.md (short-form extraction integration)
 
-Progress: [█████████░] 87%
+Progress: [█████████░] 93%
 
 ## Phase 1 Plans (Complete)
 
@@ -49,15 +49,15 @@ Progress: [█████████░] 87%
 | Plan | Wave | Description | Status |
 |------|------|-------------|--------|
 | 04-01 | 1 | Short-form citation types and patterns (Id., Ibid., supra) | Complete ✅ |
-| 04-02 | 2 | Id./Ibid. resolution engine | Not started |
-| 04-03 | 2 | Supra resolution engine | Not started |
+| 04-02 | 2 | Short-form extraction integration (tokenizer + extractors) | Complete ✅ |
+| 04-03 | 2 | Resolution engine (Id./supra/short-form resolution) | Not started |
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
-- Average duration: 159s
-- Total execution time: 0.58 hours
+- Total plans completed: 14
+- Average duration: 168s
+- Total execution time: 0.65 hours
 
 **By Phase:**
 
@@ -66,11 +66,11 @@ Progress: [█████████░] 87%
 | Phase 1 | 3/3 | 4 min | 80s |
 | Phase 2 | 6/6 | 23.3 min | 233s |
 | Phase 3 | 4/4 | 11.0 min | 165s |
-| Phase 4 | 1/3 | 3.95 min | 237s |
+| Phase 4 | 2/3 | 7.6 min | 230s |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (165s), 03-02 (164s), 03-03 (181s), 03-04 (137s), 04-01 (237s)
-- Trend: 04-01 longer due to pattern refinement and comprehensive testing
+- Last 5 plans: 03-02 (164s), 03-03 (181s), 03-04 (137s), 04-01 (237s), 04-02 (222s)
+- Trend: Phase 4 plans averaging ~230s (comprehensive testing and integration)
 
 *Updated after each plan completion*
 
@@ -200,6 +200,14 @@ Recent decisions affecting current work:
 | PATTERN-04 | Simple short-form patterns without trailing word boundaries for Id./Ibid. | Patterns correctly match Id./Ibid. in all contexts (sentence-final, mid-sentence) |
 | PATTERN-05 | Flexible SHORT_FORM_CASE_PATTERN allowing dots and spaces in reporter abbreviations | Pattern matches all standard short-form case citations across reporter types |
 
+**From 04-02 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| CONF-01 | Confidence scoring based on ambiguity: Id=1.0, supra=0.9, shortFormCase=0.7 | Reflects uncertainty in resolving citations to antecedents; Id is most certain, short-form case least certain |
+| EXTRACT-01 | Unified pincite extraction from "at [page]" pattern across all short-form types | Consistent handling of pincites; follows legal citation conventions |
+| REGEX-01 | Pattern [Ii](?:d\|bid)\\. matches both "Id." and "Ibid." in single function | Avoids code duplication; both variants have same semantic meaning (immediate preceding citation) |
+
 ### Pending Todos
 
 None yet.
@@ -220,6 +228,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (04-01 execution)
-Stopped at: Completed 04-01-PLAN.md - Short-form citation types and patterns (Phase 4: Plan 1/3 complete)
+Last session: 2026-02-05 (04-02 execution)
+Stopped at: Completed 04-02-PLAN.md - Short-form extraction integration (Phase 4: Plan 2/3 complete)
 Resume file: None
