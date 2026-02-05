@@ -147,6 +147,15 @@ Recent decisions affecting current work:
 | PIPE-03 | Warnings from cleaning layer attached to all citations | Preserves diagnostic context through pipeline layers |
 | TEST-01 | Integration tests focus on MVP capabilities | Tests validate core metadata; parenthetical parsing deferred to Phase 3 pattern enhancements |
 
+**From 03-01 execution:**
+
+| ID | Decision | Impact |
+|----|----------|--------|
+| DATA-01 | Download reporters-db JSON directly from GitHub | No npm dependency; data vendored in project for reliability |
+| DATA-02 | Use Map with lowercase-normalized keys for O(1) lookup | Fast lookups on 1235 reporters; case-insensitive matching |
+| DATA-03 | Index both edition abbreviations and variant forms | All reporter variations (F.2d, F. 2d, Fed.2d, etc.) resolve correctly |
+| DATA-04 | Lazy loading via dynamic import keeps reporters out of core bundle | Core bundle stays small; data loads only when needed |
+
 **From 03-02 execution:**
 
 | ID | Decision | Impact |
