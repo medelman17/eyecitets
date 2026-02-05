@@ -16,6 +16,7 @@ import {
   statutePatterns,
   journalPatterns,
   neutralPatterns,
+  shortFormPatterns,
 } from '@/patterns'
 
 describe('ReDoS protection', () => {
@@ -24,6 +25,7 @@ describe('ReDoS protection', () => {
     ...statutePatterns,
     ...journalPatterns,
     ...neutralPatterns,
+    ...shortFormPatterns,
   ]
 
   // Malformed inputs that could trigger catastrophic backtracking
@@ -57,6 +59,7 @@ describe('ReDoS protection', () => {
     expect(statutePatterns.length).toBeGreaterThan(0)
     expect(journalPatterns.length).toBeGreaterThan(0)
     expect(neutralPatterns.length).toBeGreaterThan(0)
+    expect(shortFormPatterns.length).toBeGreaterThan(0)
     expect(allPatterns.length).toBeGreaterThan(0)
   })
 })

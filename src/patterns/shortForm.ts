@@ -13,10 +13,10 @@
 import type { Pattern } from './casePatterns'
 
 /** Id. with optional pincite: "Id." or "Id. at 253" */
-export const ID_PATTERN: RegExp = /\b[Ii]d\.(?:\s+at\s+(\d+))?\b/g
+export const ID_PATTERN: RegExp = /\b[Ii]d\.(?:\s+at\s+(\d+))?/g
 
 /** Ibid. with optional pincite (less common variant) */
-export const IBID_PATTERN: RegExp = /\b[Ii]bid\.(?:\s+at\s+(\d+))?\b/g
+export const IBID_PATTERN: RegExp = /\b[Ii]bid\.(?:\s+at\s+(\d+))?/g
 
 /**
  * Supra with party name and optional pincite.
@@ -30,7 +30,7 @@ export const SUPRA_PATTERN: RegExp = /\b([A-Z][a-zA-Z]+(?:\s+[a-zA-Z]+)*),?\s+su
  * Pattern: number space abbreviation space "at" space number
  * Simplified detection; full parsing in extraction layer
  */
-export const SHORT_FORM_CASE_PATTERN: RegExp = /\b(\d+)\s+([A-Z][a-z.]+\d*)\s+at\s+(\d+)\b/g
+export const SHORT_FORM_CASE_PATTERN: RegExp = /\b(\d+)\s+([A-Z][A-Za-z.\s]+?(?:\d[a-z])?)\s+at\s+(\d+)\b/g
 
 /** All short-form patterns for tokenization */
 export const SHORT_FORM_PATTERNS: readonly RegExp[] = [
