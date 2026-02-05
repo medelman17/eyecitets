@@ -12,7 +12,7 @@ eyecite-ts delivers a TypeScript legal citation extraction library with feature 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Architecture** - Project scaffolding, TypeScript config, architectural design
+- [x] **Phase 1: Foundation & Architecture** - Project scaffolding, TypeScript config, architectural design ✓
 - [ ] **Phase 2: Core Parsing** - Tokenization, citation extraction, metadata, text cleaning
 - [ ] **Phase 3: Reporter Database & Annotation** - Reporter data integration, bundle optimization, annotation
 - [ ] **Phase 4: Short-Form Resolution & Integration** - Id./Supra resolution, comprehensive testing, documentation
@@ -32,9 +32,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Package and TypeScript configuration with strict mode and conditional exports
-- [ ] 01-02-PLAN.md — Build tooling (tsdown, Biome, Vitest) with dual ESM/CJS output
-- [ ] 01-03-PLAN.md — Type system (Span, Citation unions) and architecture documentation
+- [x] 01-01-PLAN.md — Package and TypeScript configuration with strict mode and conditional exports
+- [x] 01-02-PLAN.md — Build tooling (tsdown, Biome, Vitest) with dual ESM/CJS output
+- [x] 01-03-PLAN.md — Type system (Span, Citation unions) and architecture documentation
 
 ### Phase 2: Core Parsing
 **Goal**: Implement core citation detection, tokenization, metadata extraction, and text cleaning with ReDoS protection
@@ -89,7 +89,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Architecture | 0/3 | Not started | - |
+| 1. Foundation & Architecture | 3/3 | ✓ Complete | 2026-02-05 |
 | 2. Core Parsing | 0/TBD | Not started | - |
 | 3. Reporter Database & Annotation | 0/TBD | Not started | - |
 | 4. Short-Form Resolution & Integration | 0/TBD | Not started | - |

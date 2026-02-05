@@ -78,26 +78,26 @@ Requirements for initial release. Full feature parity with Python eyecite.
 
 ### Platform
 
-- [ ] **PLAT-01**: Run in Node.js 18+
-- [ ] **PLAT-02**: Run in Chrome 90+
-- [ ] **PLAT-03**: Run in Firefox 90+
-- [ ] **PLAT-04**: Run in Safari 15+
-- [ ] **PLAT-05**: Run in Edge 90+
-- [ ] **PLAT-06**: Export ESM bundle
-- [ ] **PLAT-07**: Export CommonJS bundle
-- [ ] **PLAT-08**: Provide TypeScript type declarations
-- [ ] **PLAT-09**: Tree-shakeable exports
+- [x] **PLAT-01**: Run in Node.js 18+
+- [x] **PLAT-02**: Run in Chrome 90+
+- [x] **PLAT-03**: Run in Firefox 90+
+- [x] **PLAT-04**: Run in Safari 15+
+- [x] **PLAT-05**: Run in Edge 90+
+- [x] **PLAT-06**: Export ESM bundle
+- [x] **PLAT-07**: Export CommonJS bundle
+- [x] **PLAT-08**: Provide TypeScript type declarations
+- [x] **PLAT-09**: Tree-shakeable exports
 
 ### Performance
 
 - [ ] **PERF-01**: Bundle size <50KB gzipped (core, without full reporter DB)
 - [ ] **PERF-02**: Process 10KB document in <100ms
-- [ ] **PERF-03**: Zero runtime dependencies
+- [x] **PERF-03**: Zero runtime dependencies
 
 ### Developer Experience
 
-- [ ] **DX-01**: Full TypeScript types for all public APIs
-- [ ] **DX-02**: No `any` types in public API
+- [x] **DX-01**: Full TypeScript types for all public APIs
+- [x] **DX-02**: No `any` types in public API
 - [ ] **DX-03**: Helpful error messages for invalid input
 - [ ] **DX-04**: API documentation with examples
 
@@ -189,20 +189,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-03 | Phase 3 | Pending |
 | DATA-04 | Phase 3 | Pending |
 | DATA-05 | Phase 3 | Pending |
-| PLAT-01 | Phase 1 | Pending |
-| PLAT-02 | Phase 1 | Pending |
-| PLAT-03 | Phase 1 | Pending |
-| PLAT-04 | Phase 1 | Pending |
-| PLAT-05 | Phase 1 | Pending |
-| PLAT-06 | Phase 1 | Pending |
-| PLAT-07 | Phase 1 | Pending |
-| PLAT-08 | Phase 1 | Pending |
-| PLAT-09 | Phase 1 | Pending |
+| PLAT-01 | Phase 1 | Complete |
+| PLAT-02 | Phase 1 | Complete |
+| PLAT-03 | Phase 1 | Complete |
+| PLAT-04 | Phase 1 | Complete |
+| PLAT-05 | Phase 1 | Complete |
+| PLAT-06 | Phase 1 | Complete |
+| PLAT-07 | Phase 1 | Complete |
+| PLAT-08 | Phase 1 | Complete |
+| PLAT-09 | Phase 1 | Complete |
 | PERF-01 | Phase 3 | Pending |
 | PERF-02 | Phase 3 | Pending |
-| PERF-03 | Phase 1 | Pending |
-| DX-01 | Phase 1 | Pending |
-| DX-02 | Phase 1 | Pending |
+| PERF-03 | Phase 1 | Complete |
+| DX-01 | Phase 1 | Complete |
+| DX-02 | Phase 1 | Complete |
 | DX-03 | Phase 4 | Pending |
 | DX-04 | Phase 4 | Pending |
 
@@ -219,4 +219,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2025-02-04*
-*Last updated: 2026-02-04 after roadmap creation*
+*Last updated: 2026-02-05 after Phase 1 completion*
