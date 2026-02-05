@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "isolatedDeclarations": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "ESNext",
+    "target": "ES2020",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
