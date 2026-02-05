@@ -3,7 +3,7 @@ import type { Span } from "./span"
 /**
  * Citation type discriminator for type-safe pattern matching.
  */
-export type CitationType = "case" | "statute" | "journal" | "shortForm" | "id" | "supra"
+export type CitationType = "case" | "statute" | "journal" | "neutral" | "publicLaw" | "federalRegister" | "id"
 
 /**
  * Warning generated during citation parsing.
@@ -80,6 +80,88 @@ export interface StatuteCitation extends CitationBase {
 }
 
 /**
+ * Journal citation (law review, legal periodical).
+ *
+ * Format: [Author,] [Title,] Volume Journal Page [, Pincite] [(Year)]
+ *
+ * @example "100 Harv. L. Rev. 1234"
+ * @example "Jane Doe, Article Title, 75 Yale L.J. 456, 460 (2020)"
+ */
+export interface JournalCitation extends CitationBase {
+  type: 'journal'
+  /** Author name (if extracted) */
+  author?: string
+  /** Article title (if extracted) */
+  title?: string
+  /** Volume number */
+  volume?: number
+  /** Full journal name */
+  journal: string
+  /** Standard journal abbreviation (e.g., "Harv. L. Rev.") */
+  abbreviation: string
+  /** Starting page of article */
+  page?: number
+  /** Specific page reference */
+  pincite?: number
+  /** Publication year */
+  year?: number
+}
+
+/**
+ * Neutral citation (vendor-neutral format).
+ *
+ * Format: Year Court DocumentNumber
+ *
+ * @example "2020 WL 123456" (Westlaw)
+ * @example "2020 U.S. LEXIS 456" (Lexis)
+ */
+export interface NeutralCitation extends CitationBase {
+  type: 'neutral'
+  /** Year of decision */
+  year: number
+  /** Court identifier (e.g., "WL", "U.S. LEXIS") */
+  court: string
+  /** Document number */
+  documentNumber: string
+}
+
+/**
+ * Public law citation (federal legislation).
+ *
+ * Format: Pub. L. No. Congress-LawNumber
+ *
+ * @example "Pub. L. No. 116-283"
+ * @example "Pub. L. 117-58 (Infrastructure Investment and Jobs Act)"
+ */
+export interface PublicLawCitation extends CitationBase {
+  type: 'publicLaw'
+  /** Congress number (e.g., 116) */
+  congress: number
+  /** Law number within that Congress */
+  lawNumber: number
+  /** Optional bill title extracted from nearby text */
+  title?: string
+}
+
+/**
+ * Federal Register citation.
+ *
+ * Format: Volume Fed. Reg. Page
+ *
+ * @example "85 Fed. Reg. 12345"
+ * @example "86 Fed. Reg. 56789 (Jan. 15, 2021)"
+ */
+export interface FederalRegisterCitation extends CitationBase {
+  type: 'federalRegister'
+  /** Federal Register volume */
+  volume: number
+  /** Page number */
+  page: number
+  /** Publication year (if extracted) */
+  year?: number
+}
+
+/**
  * Id. citation (refers to immediately preceding citation).
  *
  * @example "Id."
@@ -98,5 +180,20 @@ export interface IdCitation extends CitationBase {
  * if (citation.type === "case") {
  *   console.log(citation.volume) // TypeScript knows this exists
  * }
+ * @example
+ * switch (citation.type) {
+ *   case "journal":
+ *     return citation.abbreviation // Type-safe access
+ *   case "neutral":
+ *     return citation.court
+ *   // ...
+ * }
  */
-export type Citation = FullCaseCitation | StatuteCitation | IdCitation
+export type Citation =
+  | FullCaseCitation
+  | StatuteCitation
+  | JournalCitation
+  | NeutralCitation
+  | PublicLawCitation
+  | FederalRegisterCitation
+  | IdCitation
