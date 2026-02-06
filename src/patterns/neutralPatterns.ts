@@ -28,8 +28,8 @@ export const neutralPatterns: Pattern[] = [
   },
   {
     id: 'public-law',
-    regex: /\bPub\.\s?L\.\s?No\.\s?(\d+-\d+)\b/g,
-    description: 'Public Law citations (e.g., "Pub. L. No. 117-58")',
+    regex: /\bPub\.\s?L\.(?:\s?No\.)?\s?(\d+-\d+)\b/g,
+    description: 'Public Law citations (e.g., "Pub. L. No. 117-58" or "Pub. L. 117-58")',
     type: 'publicLaw',
   },
   {
