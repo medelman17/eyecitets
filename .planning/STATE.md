@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 8 of 8 (Parallel Linking & Quality Validation) — IN PROGRESS
-Plan: 1 of 3 complete (08-02 just completed)
+Plan: 1 of 3 complete (08-01 just completed)
 Status: In progress
-Last activity: 2026-02-05 — Completed 08-02-PLAN.md (Full-Span Annotation Mode)
+Last activity: 2026-02-06 — Completed 08-01-PLAN.md (Parallel Citation Detection)
 
 Progress: ██████████████░░ 73% (24/26 plans total, 17/17 v1.0 complete, 7/9 v1.1 complete)
 
-**Phase 8 progress:** 1/3 plans complete, 490 tests passing (2 failing tests in 08-01 parallel detection - pre-existing)
+**Phase 8 progress:** 1/3 plans complete, 494 tests passing
 
 Config:
 {
@@ -58,8 +58,8 @@ Config:
 
 **Velocity (v1.1-alpha):**
 - Total plans completed: 7
-- Average duration: ~4 min
-- Total execution time: ~29 min
+- Average duration: ~5.3 min
+- Total execution time: ~37 min
 
 **By Phase (v1.1-alpha):**
 
@@ -68,7 +68,7 @@ Config:
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
 | 6. Full Span & Complex Parentheticals | 2/2 | ~7.4 min | ~3.7 min |
 | 7. Party Name Extraction | 2/2 | ~13 min | ~6.5 min |
-| 8. Parallel Linking & Quality Validation | 1/3 | ~2 min | ~2 min |
+| 8. Parallel Linking & Quality Validation | 1/3 | ~8 min | ~8 min |
 
 ## Accumulated Context
 
@@ -99,6 +99,11 @@ Config:
 | 07-02 | Fallback to backward text search when extracted names unavailable | Ensures compatibility with pre-Phase 7 citations and extraction failures | Graceful degradation maintains resolution quality |
 | 07-02 | Citation boundary detection uses digit-period-space pattern | Prevents matching across citation boundaries ("10. Jones" → split before "Jones") | extractCaseName correctly handles consecutive citations |
 | 07-02 | Signal word stripping moved into extractPartyNames | Consistent plaintiff extraction regardless of resolution path | "In Smith v. Jones" → plaintiff "Smith" (not "In Smith") |
+| 08-01 | Comma-only separator for parallel citations | Bluebook standard uses comma; semicolon separates distinct citations | Simplifies detection algorithm, reduces false positives |
+| 08-01 | groupId format: ${volume}-${reporter}-${page} | Deterministic, stable, human-readable identifier | Consumers can rely on stable groupId for deduplication |
+| 08-01 | Only primary citation gets parallelCitations array | Avoids circular references, follows Bluebook convention | Clear ownership model, easier to serialize |
+| 08-01 | Singletons have undefined groupId | groupId indicates parallel group membership | Consumers check groupId presence to detect parallel citations |
+| 08-01 | Reject citations with closing paren between them | "A (1970), B (1971)" = separate cases; "A, B (1970)" = parallel | Prevents false positives for comma-separated distinct cases |
 | 08-02 | useFullSpan as option field (not separate function) | API consistency with existing useCleanText/autoEscape pattern | Single function handles both span modes with option flag |
 | 08-02 | Default useFullSpan to false for backward compatibility | Existing annotation consumers expect core citation span | Zero breaking changes, opt-in Phase 6+ feature |
 | 08-02 | Individual annotations per citation in parallel groups | Simpler implementation, gives developers control via callback | Developers can deduplicate using groupId if desired |
@@ -122,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (plan execution)
-Stopped at: Completed 08-02-PLAN.md (Full-Span Annotation Mode)
+Last session: 2026-02-06 (plan execution)
+Stopped at: Completed 08-01-PLAN.md (Parallel Citation Detection)
 Resume file: None - plan complete
