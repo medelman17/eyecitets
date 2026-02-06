@@ -315,6 +315,21 @@ describe('Full Pipeline Integration Tests', () => {
 			}
 		})
 
+		it('extracts F. App\'x citations (Federal Appendix)', () => {
+			const text = 'See Doe v. Smith, 500 F. App\'x 100 (11th Cir. 2012), for discussion.'
+			const citations = extractCitations(text)
+
+			const fAppx = citations.find(
+				(c) => c.type === 'case' && c.volume === 500 && c.reporter === 'F. App\'x',
+			)
+			expect(fAppx).toBeDefined()
+			if (fAppx && fAppx.type === 'case') {
+				expect(fAppx.volume).toBe(500)
+				expect(fAppx.reporter).toBe('F. App\'x')
+				expect(fAppx.page).toBe(100)
+			}
+		})
+
 		it('extracts Cal.App.4th citations', () => {
 			const text = 'See People v. Smith, 173 Cal.App.4th 655, for precedent.'
 			const citations = extractCitations(text)
