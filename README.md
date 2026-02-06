@@ -23,7 +23,7 @@ Extract, resolve, and annotate legal citations from court opinions and legal doc
 - **Citation annotation**: HTML markup with auto-escape XSS protection and position tracking
 - **Bundle optimization**: Tree-shakeable exports, lazy-loaded reporter data, separate entry points
 - **TypeScript native**: Discriminated unions, conditional types, type guards, full IntelliSense
-- **Zero dependencies**: No runtime dependencies, 4.4KB gzipped core bundle
+- **Zero dependencies**: No runtime dependencies, 7KB gzipped core bundle
 
 ## Installation
 
@@ -350,9 +350,9 @@ Three entry points for optimal tree-shaking:
 
 | Entry Point | Import | Gzipped |
 |------------|--------|---------|
-| Core extraction | `eyecite-ts` | 4.4 KB |
-| Annotation | `eyecite-ts/annotate` | 0.5 KB |
-| Reporter data | `eyecite-ts/data` | 88.5 KB (lazy-loaded) |
+| Core extraction | `eyecite-ts` | 7.0 KB |
+| Annotation | `eyecite-ts/annotate` | 0.7 KB |
+| Reporter data | `eyecite-ts/data` | 86.5 KB (lazy-loaded) |
 
 ```typescript
 import { extractCitations } from 'eyecite-ts'           // Core only
@@ -385,7 +385,7 @@ pnpm lint            # Lint with Biome
 pnpm format          # Format with Biome
 ```
 
-435 tests across 20 test files.
+527 tests across 22 test files.
 
 ## License
 
