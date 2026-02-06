@@ -19,6 +19,14 @@ import type { Token } from '@/tokenize/tokenizer'
 const MAX_PROXIMITY = 5
 
 /**
+ * Maximum total gap (chars) between end of one citation and start of next
+ * to even consider them as parallel candidates. Beyond this distance, we can
+ * skip all other checks (comma, parenthetical, etc.) for performance.
+ * Includes comma, spaces, and potential pincite: ", 125, " = ~10 chars
+ */
+const MAX_GAP_FOR_PARALLEL = 20
+
+/**
  * Detect parallel citation groups from tokenized citations.
  *
  * Returns a map of primary citation index to array of secondary citation indices.
@@ -90,6 +98,13 @@ export function detectParallelCitations(
 			const prevToken = j === i + 1 ? primary : tokens[j - 1]
 			const gapStart = prevToken.span.cleanEnd
 			const gapEnd = secondary.span.cleanStart
+
+			// Early exit: If gap is too large, no need to check comma/parenthetical
+			// This optimization reduces O(n²) to O(n×k) where k is avg tokens within MAX_GAP
+			const gapSize = gapEnd - gapStart
+			if (gapSize > MAX_GAP_FOR_PARALLEL) {
+				break // Too far apart to be parallel, stop looking
+			}
 
 			// Extract the gap text between citations
 			const gapText = cleanedText.substring(gapStart, gapEnd)

@@ -28,6 +28,43 @@ function parseVolume(raw: string): number | string {
 /** Month abbreviations and full names found in legal citation parentheticals */
 const MONTH_PATTERN = /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\.?/
 
+// ============================================================================
+// Compiled regex patterns for performance (hoisted to module level)
+// ============================================================================
+
+/** Matches volume-reporter-page format in citation core */
+const VOLUME_REPORTER_PAGE_REGEX = /^(\d+(?:-\d+)?)\s+([A-Za-z0-9.\s]+)\s+(\d+|_{3,}|-{3,})/
+
+/** Detects blank page placeholders (3+ underscores or dashes) */
+const BLANK_PAGE_REGEX = /^[_-]{3,}$/
+
+/** Extracts pincite (page reference after comma) */
+const PINCITE_REGEX = /,\s*(\d+)/
+
+/** Matches parenthetical content */
+const PAREN_REGEX = /\(([^)]+)\)/
+
+/** Look-ahead pattern for parenthetical after token */
+const LOOKAHEAD_PAREN_REGEX = /^(?:,\s*\d+)*\s*\(([^)]+)\)/
+
+/** Extracts pincite from look-ahead text */
+const LOOKAHEAD_PINCITE_REGEX = /^,\s*(\d+)/
+
+/** Matches chained parentheticals with disposition */
+const CHAINED_DISPOSITION_REGEX = /\([^)]+\)\s*\((en banc|per curiam)\)/i
+
+/** Identifies Supreme Court reporters for court inference */
+const SCOTUS_REPORTER_REGEX = /^(?:U\.?\s?S\.|S\.?\s?Ct\.|L\.?\s?Ed\.)/
+
+/** Citation boundary pattern (digit-period-space) */
+const CITATION_BOUNDARY_REGEX = /\d\.\s+/g
+
+/** Standard "v." or "vs." case name format */
+const V_CASE_NAME_REGEX = /([A-Z][A-Za-z0-9\s.,'&()/-]+?)\s+v(?:s)?\.?\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/
+
+/** Procedural prefix case name format */
+const PROCEDURAL_PREFIX_REGEX = /\b(In re|Ex parte|Matter of|Estate of|State ex rel\.|United States ex rel\.|Application of|Petition of)\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/i
+
 /**
  * Strips date components (month, day, year) from parenthetical content
  * to isolate the court abbreviation.
@@ -76,10 +113,9 @@ function extractCaseName(
 	// Split at last sentence boundary to avoid crossing citation boundaries
 	// Find last occurrence of digit-period-space pattern (end of reporter page like "10. Jones")
 	// This is more specific than generic ". [A-Z]" which would match "v." or "United States v."
-	const citationBoundaryRegex = /\d\.\s+/g
 	let lastBoundaryIndex = -1
 	let match: RegExpExecArray | null
-	while ((match = citationBoundaryRegex.exec(precedingText)) !== null) {
+	while ((match = CITATION_BOUNDARY_REGEX.exec(precedingText)) !== null) {
 		lastBoundaryIndex = match.index + match[0].length
 	}
 
@@ -90,9 +126,7 @@ function extractCaseName(
 
 	// Priority 1: Standard "v." or "vs." format with comma before citation
 	// Match party names with letters, numbers (for "Doe No. 2"), periods, apostrophes, ampersands, hyphens, slashes
-	const vRegex =
-		/([A-Z][A-Za-z0-9\s.,'&()/-]+?)\s+v(?:s)?\.?\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/
-	const vMatch = vRegex.exec(precedingText)
+	const vMatch = V_CASE_NAME_REGEX.exec(precedingText)
 	if (vMatch) {
 		// Check for semicolon in matched text (multi-citation separator)
 		if (!vMatch[0].includes(';')) {
@@ -103,9 +137,7 @@ function extractCaseName(
 	}
 
 	// Priority 2: Procedural prefixes (including Estate of)
-	const procRegex =
-		/\b(In re|Ex parte|Matter of|Estate of|State ex rel\.|United States ex rel\.|Application of|Petition of)\s+([A-Za-z0-9\s.,'&()/-]+?)\s*,\s*$/i
-	const procMatch = procRegex.exec(precedingText)
+	const procMatch = PROCEDURAL_PREFIX_REGEX.exec(precedingText)
 	if (procMatch) {
 		// Check for semicolon in matched text (multi-citation separator)
 		if (!procMatch[0].includes(';')) {
@@ -453,8 +485,7 @@ export function extractCase(
 	// Parse volume-reporter-page using regex
 	// Pattern: volume (digits) + reporter (letters/periods/spaces/numbers) + page (digits or blank placeholder)
 	// Use greedy matching for reporter to capture full abbreviation including spaces
-	const volumeReporterPageRegex = /^(\d+(?:-\d+)?)\s+([A-Za-z0-9.\s]+)\s+(\d+|_{3,}|-{3,})/
-	const match = volumeReporterPageRegex.exec(text)
+	const match = VOLUME_REPORTER_PAGE_REGEX.exec(text)
 
 	if (!match) {
 		// Fallback if pattern doesn't match (shouldn't happen if tokenizer is correct)
@@ -466,14 +497,13 @@ export function extractCase(
 
 	// Check if page is a blank placeholder
 	const pageStr = match[3]
-	const isBlankPage = /^[_-]{3,}$/.test(pageStr)
+	const isBlankPage = BLANK_PAGE_REGEX.test(pageStr)
 	const page = isBlankPage ? undefined : Number.parseInt(pageStr, 10)
 	const hasBlankPage = isBlankPage ? true : undefined
 
 	// Extract optional pincite (page reference after comma)
 	// Pattern: ", digits" (e.g., ", 125")
-	const pinciteRegex = /,\s*(\d+)/
-	const pinciteMatch = pinciteRegex.exec(text)
+	const pinciteMatch = PINCITE_REGEX.exec(text)
 	let pincite = pinciteMatch ? Number.parseInt(pinciteMatch[1], 10) : undefined
 
 	// Initialize Phase 6 fields
@@ -487,8 +517,7 @@ export function extractCase(
 	// Extract parenthetical from token text
 	let parentheticalContent: string | undefined
 	// Match any parenthetical (with or without letters)
-	const parenRegex = /\(([^)]+)\)/
-	const parenMatch = parenRegex.exec(text)
+	const parenMatch = PAREN_REGEX.exec(text)
 	if (parenMatch) {
 		parentheticalContent = parenMatch[1]
 		// Parse parenthetical using unified parser
@@ -504,8 +533,7 @@ export function extractCase(
 	// like "(1989)" or "(9th Cir. 2020)" are not in the token text.
 	if (cleanedText && !parentheticalContent) {
 		const afterToken = cleanedText.substring(span.cleanEnd)
-		const lookAheadRegex = /^(?:,\s*\d+)*\s*\(([^)]+)\)/
-		const lookAheadMatch = lookAheadRegex.exec(afterToken)
+		const lookAheadMatch = LOOKAHEAD_PAREN_REGEX.exec(afterToken)
 		if (lookAheadMatch) {
 			parentheticalContent = lookAheadMatch[1]
 			// Parse parenthetical using unified parser
@@ -517,7 +545,7 @@ export function extractCase(
 
 			// Extract pincite from look-ahead if not already found in token text
 			if (pincite === undefined) {
-				const laPinciteMatch = /^,\s*(\d+)/.exec(afterToken)
+				const laPinciteMatch = LOOKAHEAD_PINCITE_REGEX.exec(afterToken)
 				if (laPinciteMatch) {
 					pincite = Number.parseInt(laPinciteMatch[1], 10)
 				}
@@ -529,15 +557,14 @@ export function extractCase(
 	if (cleanedText && !disposition) {
 		const afterToken = cleanedText.substring(span.cleanEnd)
 		// Look for second parenthetical after first one
-		const chainedRegex = /\([^)]+\)\s*\((en banc|per curiam)\)/i
-		const chainedMatch = chainedRegex.exec(afterToken)
+		const chainedMatch = CHAINED_DISPOSITION_REGEX.exec(afterToken)
 		if (chainedMatch) {
 			disposition = chainedMatch[1].toLowerCase()
 		}
 	}
 
 	// Infer court from reporter for known Supreme Court reporters
-	if (!court && /^(?:U\.?\s?S\.|S\.?\s?Ct\.|L\.?\s?Ed\.)/.test(reporter)) {
+	if (!court && SCOTUS_REPORTER_REGEX.test(reporter)) {
 		court = 'scotus'
 	}
 
