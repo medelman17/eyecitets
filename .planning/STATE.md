@@ -9,14 +9,14 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 
 ## Current Position
 
-Phase: 7 of 8 (Party Name Extraction) — VERIFIED
-Plan: 2 of 2 complete
-Status: Phase complete, verified
-Last activity: 2026-02-05 — Phase 7 complete, verified
+Phase: 8 of 8 (Parallel Linking & Quality Validation) — IN PROGRESS
+Plan: 1 of 3 complete (08-02 just completed)
+Status: In progress
+Last activity: 2026-02-05 — Completed 08-02-PLAN.md (Full-Span Annotation Mode)
 
-Progress: █████████████░░░ 69% (23/26 plans total, 17/17 v1.0 complete, 6/9 v1.1 complete)
+Progress: ██████████████░░ 73% (24/26 plans total, 17/17 v1.0 complete, 7/9 v1.1 complete)
 
-**Phase 7 verified:** 5/5 must-haves passed, 5/5 success criteria passed, 470 tests passing
+**Phase 8 progress:** 1/3 plans complete, 490 tests passing (2 failing tests in 08-01 parallel detection - pre-existing)
 
 Config:
 {
@@ -57,9 +57,9 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 6
-- Average duration: ~4.5 min
-- Total execution time: ~27 min
+- Total plans completed: 7
+- Average duration: ~4 min
+- Total execution time: ~29 min
 
 **By Phase (v1.1-alpha):**
 
@@ -68,6 +68,7 @@ Config:
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
 | 6. Full Span & Complex Parentheticals | 2/2 | ~7.4 min | ~3.7 min |
 | 7. Party Name Extraction | 2/2 | ~13 min | ~6.5 min |
+| 8. Parallel Linking & Quality Validation | 1/3 | ~2 min | ~2 min |
 
 ## Accumulated Context
 
@@ -98,6 +99,10 @@ Config:
 | 07-02 | Fallback to backward text search when extracted names unavailable | Ensures compatibility with pre-Phase 7 citations and extraction failures | Graceful degradation maintains resolution quality |
 | 07-02 | Citation boundary detection uses digit-period-space pattern | Prevents matching across citation boundaries ("10. Jones" → split before "Jones") | extractCaseName correctly handles consecutive citations |
 | 07-02 | Signal word stripping moved into extractPartyNames | Consistent plaintiff extraction regardless of resolution path | "In Smith v. Jones" → plaintiff "Smith" (not "In Smith") |
+| 08-02 | useFullSpan as option field (not separate function) | API consistency with existing useCleanText/autoEscape pattern | Single function handles both span modes with option flag |
+| 08-02 | Default useFullSpan to false for backward compatibility | Existing annotation consumers expect core citation span | Zero breaking changes, opt-in Phase 6+ feature |
+| 08-02 | Individual annotations per citation in parallel groups | Simpler implementation, gives developers control via callback | Developers can deduplicate using groupId if desired |
+| 08-02 | Graceful fallback when fullSpan missing | Mixed citation sets (pre/post-Phase 6) shouldn't break | Robust handling of partial Phase 6 adoption |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -117,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05 (phase execution)
-Stopped at: Phase 7 complete, verified
-Resume file: .planning/phases/07-party-name-extraction/07-VERIFICATION.md
+Last session: 2026-02-05 (plan execution)
+Stopped at: Completed 08-02-PLAN.md (Full-Span Annotation Mode)
+Resume file: None - plan complete
