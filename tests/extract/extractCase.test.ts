@@ -159,6 +159,70 @@ describe('extractCase', () => {
 			expect(citation.reporter).toBe('F.Supp.4th')
 			expect(citation.page).toBe(500)
 		})
+
+		it('should extract Ohio St. 3d citations (multi-word reporter)', () => {
+			const token: Token = {
+				text: '85 Ohio St. 3d 632',
+				span: { cleanStart: 0, cleanEnd: 18 },
+				type: 'case',
+				patternId: 'state-reporter',
+			}
+			const transformationMap = createIdentityMap()
+
+			const citation = extractCase(token, transformationMap)
+
+			expect(citation.volume).toBe(85)
+			expect(citation.reporter).toBe('Ohio St. 3d')
+			expect(citation.page).toBe(632)
+		})
+
+		it('should extract Md. App. citations (multi-word reporter)', () => {
+			const token: Token = {
+				text: '200 Md. App. 573',
+				span: { cleanStart: 0, cleanEnd: 16 },
+				type: 'case',
+				patternId: 'state-reporter',
+			}
+			const transformationMap = createIdentityMap()
+
+			const citation = extractCase(token, transformationMap)
+
+			expect(citation.volume).toBe(200)
+			expect(citation.reporter).toBe('Md. App.')
+			expect(citation.page).toBe(573)
+		})
+
+		it('should extract Mass. App. Ct. citations (multi-word reporter)', () => {
+			const token: Token = {
+				text: '50 Mass. App. Ct. 100',
+				span: { cleanStart: 0, cleanEnd: 21 },
+				type: 'case',
+				patternId: 'state-reporter',
+			}
+			const transformationMap = createIdentityMap()
+
+			const citation = extractCase(token, transformationMap)
+
+			expect(citation.volume).toBe(50)
+			expect(citation.reporter).toBe('Mass. App. Ct.')
+			expect(citation.page).toBe(100)
+		})
+
+		it('should extract Conn. App. citations (multi-word reporter)', () => {
+			const token: Token = {
+				text: '75 Conn. App. 250',
+				span: { cleanStart: 0, cleanEnd: 17 },
+				type: 'case',
+				patternId: 'state-reporter',
+			}
+			const transformationMap = createIdentityMap()
+
+			const citation = extractCase(token, transformationMap)
+
+			expect(citation.volume).toBe(75)
+			expect(citation.reporter).toBe('Conn. App.')
+			expect(citation.page).toBe(250)
+		})
 	})
 
 	describe('optional metadata extraction', () => {

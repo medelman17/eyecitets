@@ -596,4 +596,90 @@ describe('Full Pipeline Integration Tests', () => {
 			}
 		})
 	})
+
+	describe('Multi-word State Reporters', () => {
+		it('extracts Ohio St. 3d citations', () => {
+			const text = '85 Ohio St. 3d 632 (1999)'
+			const citations = extractCitations(text)
+
+			const caseCitation = citations.find(c => c.type === 'case' && c.volume === 85)
+			expect(caseCitation).toBeDefined()
+			expect(caseCitation).toMatchObject({
+				type: 'case',
+				volume: 85,
+				reporter: 'Ohio St. 3d',
+				page: 632,
+			})
+		})
+
+		it('extracts Md. App. citations (should not be misclassified as journal)', () => {
+			const text = '200 Md. App. 573 (2011)'
+			const citations = extractCitations(text)
+
+			const caseCitation = citations.find(c => c.type === 'case' && c.volume === 200)
+			expect(caseCitation).toBeDefined()
+			expect(caseCitation).toMatchObject({
+				type: 'case',
+				volume: 200,
+				reporter: 'Md. App.',
+				page: 573,
+			})
+
+			// Ensure it's not misclassified as journal
+			const journalCitation = citations.find(c => c.type === 'journal')
+			expect(journalCitation).toBeUndefined()
+		})
+
+		it('extracts Mass. App. Ct. citations', () => {
+			const text = '50 Mass. App. Ct. 100 (2000)'
+			const citations = extractCitations(text)
+
+			const caseCitation = citations.find(c => c.type === 'case' && c.volume === 50)
+			expect(caseCitation).toBeDefined()
+			expect(caseCitation).toMatchObject({
+				type: 'case',
+				volume: 50,
+				reporter: 'Mass. App. Ct.',
+				page: 100,
+			})
+		})
+
+		it('extracts Conn. App. citations', () => {
+			const text = '75 Conn. App. 250 (2002)'
+			const citations = extractCitations(text)
+
+			const caseCitation = citations.find(c => c.type === 'case' && c.volume === 75)
+			expect(caseCitation).toBeDefined()
+			expect(caseCitation).toMatchObject({
+				type: 'case',
+				volume: 75,
+				reporter: 'Conn. App.',
+				page: 250,
+			})
+		})
+
+		it('handles multiple multi-word reporters in same text', () => {
+			const text = 'Compare 85 Ohio St. 3d 632 (1999) with 200 Md. App. 573 (2011)'
+			const citations = extractCitations(text)
+
+			const ohioCitation = citations.find(c => c.type === 'case' && c.volume === 85)
+			const mdCitation = citations.find(c => c.type === 'case' && c.volume === 200)
+
+			expect(ohioCitation).toBeDefined()
+			expect(ohioCitation).toMatchObject({
+				type: 'case',
+				volume: 85,
+				reporter: 'Ohio St. 3d',
+				page: 632,
+			})
+
+			expect(mdCitation).toBeDefined()
+			expect(mdCitation).toMatchObject({
+				type: 'case',
+				volume: 200,
+				reporter: 'Md. App.',
+				page: 573,
+			})
+		})
+	})
 })
