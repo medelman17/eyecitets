@@ -96,6 +96,22 @@ describe('extractCase', () => {
 			expect(citation.page).toBe(100)
 		})
 
+		it('should extract F. App\'x citations (Federal Appendix)', () => {
+			const token: Token = {
+				text: '500 F. App\'x 100',
+				span: { cleanStart: 0, cleanEnd: 16 },
+				type: 'case',
+				patternId: 'federal-reporter',
+			}
+			const transformationMap = createIdentityMap()
+
+			const citation = extractCase(token, transformationMap)
+
+			expect(citation.volume).toBe(500)
+			expect(citation.reporter).toBe('F. App\'x')
+			expect(citation.page).toBe(100)
+		})
+
 		it('should extract Cal.App.4th citations', () => {
 			const token: Token = {
 				text: '173 Cal.App.4th 655',
