@@ -216,6 +216,30 @@ describe('extractStatute', () => {
 		})
 	})
 
+	describe('USC without periods', () => {
+		it('should extract USC citation without periods', () => {
+			const citations = extractCitations('15 USC § 78j')
+			expect(citations).toHaveLength(1)
+			expect(citations[0].type).toBe('statute')
+			if (citations[0].type === 'statute') {
+				expect(citations[0].title).toBe(15)
+				expect(citations[0].code).toBe('USC')
+				expect(citations[0].section).toBe('78j')
+			}
+		})
+
+		it('should still extract standard USC citation with periods', () => {
+			const citations = extractCitations('15 U.S.C. § 78j')
+			expect(citations).toHaveLength(1)
+			expect(citations[0].type).toBe('statute')
+			if (citations[0].type === 'statute') {
+				expect(citations[0].title).toBe(15)
+				expect(citations[0].code).toBe('U.S.C.')
+				expect(citations[0].section).toBe('78j')
+			}
+		})
+	})
+
 	describe('metadata fields', () => {
 		it('should include all required CitationBase fields', () => {
 			const token: Token = {
