@@ -191,10 +191,16 @@ export function extractCitations(
 	// Multiple patterns may match the same text (e.g., "500 F.2d 123" matches both federal-reporter and state-reporter)
 	// Keep only the most specific match for each position
 	const deduplicatedTokens: typeof tokens = []
-	const seenPositions = new Set<string>()
+	const seenPositions = new Set<number | string>()
+
+	// Performance optimization: Use bitpacking for typical documents (<65K chars)
+	// For larger documents, fall back to string keys
+	const useBitpacking = cleaned.length < 65536
 
 	for (const token of tokens) {
-		const posKey = `${token.span.cleanStart}-${token.span.cleanEnd}`
+		const posKey = useBitpacking
+			? (token.span.cleanStart << 16) | token.span.cleanEnd
+			: `${token.span.cleanStart}-${token.span.cleanEnd}`
 		if (!seenPositions.has(posKey)) {
 			seenPositions.add(posKey)
 			deduplicatedTokens.push(token)
