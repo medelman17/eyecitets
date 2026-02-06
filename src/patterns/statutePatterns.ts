@@ -21,6 +21,12 @@ export const statutePatterns: Pattern[] = [
     type: 'statute',
   },
   {
+    id: 'cfr',
+    regex: /\b(\d+)\s+C\.F\.R\.?\s+§+\s*(\d+[A-Za-z0-9.]*)\b/g,
+    description: 'Code of Federal Regulations citations (e.g., "40 C.F.R. § 122")',
+    type: 'statute',
+  },
+  {
     id: 'state-code',
     regex: /\b([A-Z][a-z]+\.?\s+[A-Za-z.]+\s+Code)\s+§\s*(\d+[A-Za-z]*)\b/g,
     description: 'State code citations (broad pattern, e.g., "Cal. Penal Code § 187")',
