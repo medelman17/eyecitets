@@ -115,11 +115,12 @@ Plans:
   4. Annotation supports full span mode (annotate from case name through parenthetical)
   5. Bundle size remains under 50KB gzipped
   6. Performance remains under 100ms for 10KB documents
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
+- [ ] 08-01-PLAN.md — Parallel citation detection with groupId and parallelCitations (TDD)
+- [ ] 08-02-PLAN.md — Full-span annotation mode (useFullSpan option)
+- [ ] 08-03-PLAN.md — Golden test corpus and quality validation
 
 ## Progress
 
@@ -135,4 +136,4 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 | 5. Type System & Blank Pages | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 6. Full Span & Complex Parentheticals | v1.1 | 2/2 | Complete | 2026-02-05 |
 | 7. Party Name Extraction | v1.1 | 2/2 | Complete | 2026-02-05 |
-| 8. Parallel Linking & Quality Validation | v1.1 | 0/2 | Not started | - |
+| 8. Parallel Linking & Quality Validation | v1.1 | 0/3 | Not started | - |
