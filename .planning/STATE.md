@@ -9,14 +9,14 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 
 ## Current Position
 
-Phase: 8 of 8 (Parallel Linking & Quality Validation) — IN PROGRESS
-Plan: 1 of 3 complete (08-01 just completed)
-Status: In progress
-Last activity: 2026-02-06 — Completed 08-01-PLAN.md (Parallel Citation Detection)
+Phase: 8 of 8 (Parallel Linking & Quality Validation) — COMPLETE
+Plan: 3 of 3 complete (08-03 just completed)
+Status: Phase complete, v1.1 milestone complete
+Last activity: 2026-02-06 — Completed 08-03-PLAN.md (Golden Corpus & Quality Validation)
 
-Progress: ██████████████░░ 73% (24/26 plans total, 17/17 v1.0 complete, 7/9 v1.1 complete)
+Progress: ████████████████ 100% (26/26 plans total, 17/17 v1.0 complete, 9/9 v1.1 complete)
 
-**Phase 8 progress:** 1/3 plans complete, 494 tests passing
+**Phase 8 progress:** 3/3 plans complete, 528 tests passing
 
 Config:
 {
@@ -37,8 +37,8 @@ Config:
 
 ## Milestone History
 
-- v1.0-alpha: 4 phases, 17 plans, 368 tests, shipped 2026-02-05
-- v1.1 Extraction Accuracy: 4 phases, 9 plans (estimated), in progress (6/9 complete)
+- v1.0-alpha: 4 phases, 17 plans, 494 tests, shipped 2026-02-05
+- v1.1 Extraction Accuracy: 4 phases, 9 plans, 528 tests, shipped 2026-02-06
 
 ## Performance Metrics
 
@@ -57,9 +57,9 @@ Config:
 | 4. Resolution & Annotation | 6 | ~35 min | ~6 min |
 
 **Velocity (v1.1-alpha):**
-- Total plans completed: 7
-- Average duration: ~5.3 min
-- Total execution time: ~37 min
+- Total plans completed: 9
+- Average duration: ~5.4 min
+- Total execution time: ~49 min
 
 **By Phase (v1.1-alpha):**
 
@@ -68,7 +68,7 @@ Config:
 | 5. Type System & Blank Pages | 2/2 | ~5 min | ~2.5 min |
 | 6. Full Span & Complex Parentheticals | 2/2 | ~7.4 min | ~3.7 min |
 | 7. Party Name Extraction | 2/2 | ~13 min | ~6.5 min |
-| 8. Parallel Linking & Quality Validation | 1/3 | ~8 min | ~8 min |
+| 8. Parallel Linking & Quality Validation | 3/3 | ~23.5 min | ~7.8 min |
 
 ## Accumulated Context
 
@@ -108,6 +108,8 @@ Config:
 | 08-02 | Default useFullSpan to false for backward compatibility | Existing annotation consumers expect core citation span | Zero breaking changes, opt-in Phase 6+ feature |
 | 08-02 | Individual annotations per citation in parallel groups | Simpler implementation, gives developers control via callback | Developers can deduplicate using groupId if desired |
 | 08-02 | Graceful fallback when fullSpan missing | Mixed citation sets (pre/post-Phase 6) shouldn't break | Robust handling of partial Phase 6 adoption |
+| 08-03 | Key field matching for golden corpus tests | Full object snapshots break on new field additions | Flexible regression testing focused on critical fields |
+| 08-03 | Corpus reflects actual extractor output | For quality validation, extractor is source of truth | Golden corpus documents Phase 8 behavior accurately |
 
 Recent decisions from v1.0-alpha affecting v1.1:
 - Dual position tracking (Span) enables accurate fullSpan calculation
@@ -128,5 +130,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-06 (plan execution)
-Stopped at: Completed 08-01-PLAN.md (Parallel Citation Detection)
-Resume file: None - plan complete
+Stopped at: Completed 08-03-PLAN.md (Golden Corpus & Quality Validation)
+Resume file: None - Phase 8 complete, v1.1 milestone complete
