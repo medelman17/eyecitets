@@ -216,6 +216,44 @@ describe('extractStatute', () => {
 		})
 	})
 
+	describe('secondary source exclusion', () => {
+		it('should NOT extract Model Penal Code as statute (secondary source)', () => {
+			const citations = extractCitations('Model Penal Code § 2.02 (Am. L. Inst. 1962)')
+			expect(citations).toHaveLength(0)
+		})
+
+		it('should NOT extract Uniform Commercial Code when cited as model law', () => {
+			const citations = extractCitations('Uniform Commercial Code § 2-207')
+			expect(citations).toHaveLength(0)
+		})
+
+		it('should NOT extract Restatement citations', () => {
+			const citations = extractCitations('Restatement Second Code § 402A')
+			expect(citations).toHaveLength(0)
+		})
+
+		it('should NOT extract Restatement of Torts citations', () => {
+			const citations = extractCitations('Restatement of Torts Code § 402A')
+			expect(citations).toHaveLength(0)
+		})
+
+		it('should still extract valid state codes that contain "Code"', () => {
+			const citations = extractCitations('Cal. Penal Code § 187')
+			expect(citations).toHaveLength(1)
+			expect(citations[0].type).toBe('statute')
+			if (citations[0].type === 'statute') {
+				expect(citations[0].code).toBe('Cal. Penal Code')
+				expect(citations[0].section).toBe('187')
+			}
+		})
+
+		it('should still extract valid USC citations', () => {
+			const citations = extractCitations('42 U.S.C. § 1983')
+			expect(citations).toHaveLength(1)
+			expect(citations[0].type).toBe('statute')
+		})
+	})
+
 	describe('metadata fields', () => {
 		it('should include all required CitationBase fields', () => {
 			const token: Token = {

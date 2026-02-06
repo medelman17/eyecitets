@@ -22,8 +22,8 @@ export const statutePatterns: Pattern[] = [
   },
   {
     id: 'state-code',
-    regex: /\b([A-Z][a-z]+\.?\s+[A-Za-z.]+\s+Code)\s+§\s*(\d+[A-Za-z]*)\b/g,
-    description: 'State code citations (broad pattern, e.g., "Cal. Penal Code § 187")',
+    regex: /(?<!Model\s)(?<!Uniform\s)(?<!Restatement\s)(?<!Restatement\sof\s)\b([A-Z][a-z]+\.?\s+[A-Za-z.]+\s+Code)\s+§\s*(\d+[A-Za-z]*)\b/g,
+    description: 'State code citations (broad pattern, e.g., "Cal. Penal Code § 187"). Excludes secondary sources like Model Penal Code, Uniform Commercial Code, and Restatements.',
     type: 'statute',
   },
 ]
