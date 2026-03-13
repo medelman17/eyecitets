@@ -29,6 +29,7 @@ const MASS_CHAPTER_RE = /^(.*?)\s+(?:ch\.?|c\.?)\s*(\w+),?\s*§\s*(.+)$/
 /** Map normalized jurisdiction prefixes to 2-letter state codes */
 const PREFIX_MAP: Record<string, string> = {
   "n.y.": "NY",
+  "n.y": "NY",
   ny: "NY",
   "cal.": "CA",
   cal: "CA",
@@ -74,8 +75,10 @@ function cleanCodeName(raw: string): string {
       .replace(/^\s*Code\s+Ann\.\s*,\s*/i, "")
       // MD: "Code, Ins." → "Ins."
       .replace(/^\s*Code\s*,\s*/i, "")
-      // Trailing " Code" or " Law" (e.g., "Penal Code" → "Penal", "Penal Law" → "Penal")
-      .replace(/\s+(?:Code|Law)\s*$/i, "")
+      // Trailing " Code" or " Law" when preceded by a word char (not a dot)
+      // e.g., "Penal Code" → "Penal", "Penal Law" → "Penal"
+      // but NOT "Crim. Law" (MD article name) — dot before space preserves the name
+      .replace(/(\w)\s+(?:Code|Law)\s*$/i, "$1")
       // Trailing " Ann." (e.g., "Code Ann." → "Code" after prior rules skip)
       .replace(/\s+Ann\.?\s*$/i, "")
       // Trailing comma/space artifacts

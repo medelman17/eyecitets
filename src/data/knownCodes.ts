@@ -903,23 +903,37 @@ export const namedCodes: CodeEntry[] = [
  */
 export function findNamedCode(jurisdiction: string, codeName: string): CodeEntry | undefined {
   const normalized = codeName.replace(/\s+/g, ' ').trim().toLowerCase()
-  const candidates = namedCodes.filter(e => e.jurisdiction === jurisdiction)
+  const candidates = _byJurisdiction.get(jurisdiction)
+  if (!candidates) return undefined
 
   let bestMatch: CodeEntry | undefined
   let bestLen = 0
 
-  for (const entry of candidates) {
-    for (const pattern of entry.patterns) {
-      const lower = pattern.toLowerCase()
-      if (normalized === lower || normalized.startsWith(lower)) {
-        if (lower.length > bestLen) {
-          bestMatch = entry
-          bestLen = lower.length
-        }
+  for (const { entry, lower } of candidates) {
+    if (normalized === lower || normalized.startsWith(lower)) {
+      if (lower.length > bestLen) {
+        bestMatch = entry
+        bestLen = lower.length
       }
     }
   }
   return bestMatch
+}
+
+/**
+ * Pre-built index: jurisdiction → array of { entry, lower } for O(1) jurisdiction lookup.
+ * Patterns are pre-lowercased to avoid per-call allocations.
+ */
+const _byJurisdiction = new Map<string, Array<{ entry: CodeEntry; lower: string }>>()
+for (const entry of namedCodes) {
+  let arr = _byJurisdiction.get(entry.jurisdiction)
+  if (!arr) {
+    arr = []
+    _byJurisdiction.set(entry.jurisdiction, arr)
+  }
+  for (const pattern of entry.patterns) {
+    arr.push({ entry, lower: pattern.toLowerCase() })
+  }
 }
 
 /**
