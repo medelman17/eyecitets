@@ -14,10 +14,9 @@ import type { Token } from '@/tokenize'
 import type { StatuteCitation } from '@/types/citation'
 import type { TransformationMap } from '@/types/span'
 import { findAbbreviatedCode } from '@/data/knownCodes'
+import { parseBody } from './parseBody'
 
 const ABBREVIATED_RE = /^(?:(\d+)\s+)?(.+?)\s*§?\s*(\d+[A-Za-z0-9.:/-]*(?:\([^)]*\))*(?:\s*et\s+seq\.?)?)$/
-const SUBSECTION_RE = /^([^(]+?)\s*((?:\([^)]*\))*)$/
-const ET_SEQ_RE = /\s*et\s+seq\.?\s*$/i
 
 export function extractAbbreviated(
   token: Token,
@@ -43,23 +42,7 @@ export function extractAbbreviated(
   const jurisdiction = codeEntry?.jurisdiction
   const code = abbrevText
 
-  let hasEtSeq = false
-  if (ET_SEQ_RE.test(rawBody)) {
-    hasEtSeq = true
-    rawBody = rawBody.replace(ET_SEQ_RE, '')
-  }
-
-  let section: string
-  let subsection: string | undefined
-
-  const subMatch = SUBSECTION_RE.exec(rawBody.trim())
-  const subGroups = subMatch?.[2]
-  if (subMatch !== null && subGroups) {
-    section = subMatch[1].trim()
-    subsection = subGroups || undefined
-  } else {
-    section = rawBody.trim()
-  }
+  const { section, subsection, hasEtSeq } = parseBody(rawBody)
 
   const originalStart = transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
   const originalEnd = transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd

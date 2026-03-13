@@ -35,7 +35,7 @@ export const abbreviatedCodes: CodeEntry[] = [
     abbreviation: 'STAT',
     family: 'abbreviated',
     patterns: [
-      'Fla. Stat.', 'Fla Stat', 'Florida Statutes', 'Fla. Stat. Ann.', 'F.S.', 'FS',
+      'Fla. Stat.', 'Fla Stat', 'Fla. Stat. Ann.', 'F.S.', 'FS',
     ],
   },
   {
