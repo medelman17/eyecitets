@@ -185,12 +185,25 @@ export interface FullCaseCitation extends CitationBase {
  * Statute citation (U.S. Code, state codes, etc.).
  *
  * @example "42 U.S.C. § 1983"
+ * @example "42 U.S.C. § 1983(a)(1) et seq."
  */
 export interface StatuteCitation extends CitationBase {
   type: "statute"
   title?: number
   code: string
   section: string
+  /** Subsection/pincite chain, e.g. "(a)(1)(A)" */
+  subsection?: string
+  /** 2-letter state code or "US" when unambiguously identified */
+  jurisdiction?: string
+  /**
+   * Alias for subsection (eyecite-ts convention).
+   * Note: this is string (subsection chain), unlike FullCaseCitation.pincite which is number (page offset).
+   * The discriminated union on `type` ensures type safety at call sites.
+   */
+  pincite?: string
+  /** True when "et seq." follows the citation */
+  hasEtSeq?: boolean
 }
 
 /**

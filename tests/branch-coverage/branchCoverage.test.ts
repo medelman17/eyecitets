@@ -196,19 +196,20 @@ describe('extractFederalRegister.ts — throw branch and year absence', () => {
 })
 
 describe('extractStatute.ts — throw branch and known code branch', () => {
-	it('should throw on text that does not match statute regex', () => {
+	it('should return low-confidence fallback on text that does not match statute regex', () => {
 		const token: Token = {
 			text: 'not a statute',
 			span: { cleanStart: 0, cleanEnd: 13 },
 			type: 'statute',
 			patternId: 'test',
 		}
-		expect(() => extractStatute(token, createIdentityMap())).toThrow(
-			'Failed to parse statute citation',
-		)
+		// Legacy path no longer throws — returns low-confidence fallback instead
+		const citation = extractStatute(token, createIdentityMap())
+		expect(citation.type).toBe('statute')
+		expect(citation.confidence).toBe(0.3)
 	})
 
-	it('should boost confidence for known code (U.S.C.)', () => {
+	it('should have high confidence for usc patternId (routed to extractFederal)', () => {
 		const token: Token = {
 			text: '42 U.S.C. § 1983',
 			span: { cleanStart: 0, cleanEnd: 16 },
@@ -216,7 +217,8 @@ describe('extractStatute.ts — throw branch and known code branch', () => {
 			patternId: 'usc',
 		}
 		const citation = extractStatute(token, createIdentityMap())
-		expect(citation.confidence).toBe(0.8) // 0.5 base + 0.3 known code
+		// extractFederal returns 0.95 base + 0.05 for title = 1.0
+		expect(citation.confidence).toBeGreaterThanOrEqual(0.95)
 	})
 
 	it('should not boost confidence for unknown code', () => {
