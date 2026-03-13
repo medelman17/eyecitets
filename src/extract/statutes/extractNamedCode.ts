@@ -75,10 +75,10 @@ function cleanCodeName(raw: string): string {
       .replace(/^\s*Code\s+Ann\.\s*,\s*/i, "")
       // MD: "Code, Ins." → "Ins."
       .replace(/^\s*Code\s*,\s*/i, "")
-      // Trailing " Code" or " Law" when preceded by a word char (not a dot)
-      // e.g., "Penal Code" → "Penal", "Penal Law" → "Penal"
-      // but NOT "Crim. Law" (MD article name) — dot before space preserves the name
-      .replace(/(\w)\s+(?:Code|Law)\s*$/i, "$1")
+      // Trailing " Code" only (e.g., "Penal Code" → "Penal", "Civ. Proc. Code" → "Civ. Proc.")
+      // Do NOT strip " Law" — MD article names contain "Law" (e.g., "Crim. Law", "Criminal Law")
+      // and NY "Penal Law" → "Penal Law" still matches registry via startsWith("Penal")
+      .replace(/\s+Code\s*$/i, "")
       // Trailing " Ann." (e.g., "Code Ann." → "Code" after prior rules skip)
       .replace(/\s+Ann\.?\s*$/i, "")
       // Trailing comma/space artifacts
@@ -105,8 +105,8 @@ export function extractNamedCode(
 
   if (token.patternId === "mass-chapter") {
     const match = MASS_CHAPTER_RE.exec(text)
-    jurisdiction = "MA"
     if (match) {
+      jurisdiction = "MA"
       code = match[2] // chapter number (e.g., "93A")
       rawBody = match[3]
     } else {

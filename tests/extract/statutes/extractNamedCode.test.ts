@@ -129,10 +129,18 @@ describe("extractNamedCode", () => {
       expect(c.confidence).toBeLessThanOrEqual(0.6)
     })
 
-    it("should handle malformed token", () => {
+    it("should handle malformed named-code token", () => {
       const c = extractNamedCode(makeToken("just text"), map)
       expect(c.type).toBe("statute")
       expect(c.section).toBe("")
+    })
+
+    it("should handle malformed mass-chapter token with low confidence", () => {
+      const c = extractNamedCode(makeToken("malformed mass text", "mass-chapter"), map)
+      expect(c.type).toBe("statute")
+      expect(c.section).toBe("")
+      expect(c.jurisdiction).toBeUndefined()
+      expect(c.confidence).toBeLessThanOrEqual(0.5)
     })
   })
 })

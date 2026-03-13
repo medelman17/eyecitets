@@ -155,7 +155,7 @@
   {
     "text": "N.Y. Penal Law § 125.25(1)(a)",
     "expected": [
-      { "type": "statute", "code": "Penal", "section": "125.25", "subsection": "(1)(a)", "jurisdiction": "NY" }
+      { "type": "statute", "code": "Penal Law", "section": "125.25", "subsection": "(1)(a)", "jurisdiction": "NY" }
     ]
   },
   {

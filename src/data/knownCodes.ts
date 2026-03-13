@@ -153,7 +153,7 @@ export const abbreviatedCodes: CodeEntry[] = [
  * before more general ones (e.g., "Civ. Proc." before "Civ.") so that
  * findNamedCode's longest-match wins correctly.
  *
- * Covers 7 jurisdictions: NY (21 entries), CA (29 entries), TX (30 entries),
+ * Covers 7 jurisdictions: NY (21 entries), CA (29 entries), TX (29 entries),
  * MD (36 entries), VA (1 entry), AL (1 entry), MA (1 entry).
  */
 export const namedCodes: CodeEntry[] = [
