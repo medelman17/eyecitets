@@ -15,7 +15,7 @@ Extract, resolve, and annotate legal citations from court opinions and legal doc
 
 ## Features
 
-- **Full citation extraction**: Case citations, statutes, journal articles, neutral citations, public laws, federal register
+- **Full citation extraction**: Case citations, statutes (20 jurisdictions), journal articles, neutral citations, public laws, federal register
 - **Case name & full span**: Backward search extracts case names ("Smith v. Jones", "In re Smith"), `fullSpan` covers case name through closing parenthetical
 - **Parallel citation linking**: Automatic detection and grouping of comma-separated citations sharing a parenthetical (e.g., "410 U.S. 113, 93 S. Ct. 705 (1973)")
 - **Complex parentheticals**: Unified parser handles court+year, full dates (Jan. 15, 2020 / January 15, 2020 / 1/15/2020), disposition (en banc, per curiam), and chained parentheticals
@@ -24,7 +24,7 @@ Extract, resolve, and annotate legal citations from court opinions and legal doc
 - **Citation annotation**: HTML markup with auto-escape XSS protection and position tracking
 - **Bundle optimization**: Tree-shakeable exports, lazy-loaded reporter data, separate entry points
 - **TypeScript native**: Discriminated unions, conditional types, type guards, full IntelliSense
-- **Zero dependencies**: No runtime dependencies, 7KB gzipped core bundle
+- **Zero dependencies**: No runtime dependencies, ~10KB gzipped core bundle
 
 ## Installation
 
@@ -74,6 +74,46 @@ citations.forEach(citation => {
   console.log(citation.type) // 'case', 'statute', 'journal', etc.
 })
 ```
+
+### Statute Citations
+
+Extract citations from 20 state and federal jurisdictions with subsection, et seq., and jurisdiction identification:
+
+```typescript
+import { extractCitations } from 'eyecite-ts'
+
+const text = `
+  See 42 U.S.C. § 1983(a)(1) et seq.
+  Also Cal. Penal Code § 187.
+  And N.Y. Penal Law § 125.25(1)(a).
+  Compare 735 ILCS 5/2-1001.
+`
+const citations = extractCitations(text)
+
+// Federal with subsections + et seq.
+// { type: 'statute', title: 42, code: 'U.S.C.', section: '1983',
+//   subsection: '(a)(1)', jurisdiction: 'US', hasEtSeq: true, confidence: 1.0 }
+
+// California named-code
+// { type: 'statute', code: 'Penal', section: '187', jurisdiction: 'CA', confidence: 0.95 }
+
+// New York named-code with subsections
+// { type: 'statute', code: 'Penal Law', section: '125.25',
+//   subsection: '(1)(a)', jurisdiction: 'NY', confidence: 1.0 }
+
+// Illinois chapter-act format
+// { type: 'statute', title: 735, code: '5', section: '2-1001',
+//   jurisdiction: 'IL', confidence: 0.95 }
+```
+
+**Supported jurisdictions:**
+
+| Family | Jurisdictions |
+|--------|--------------|
+| Federal | USC, CFR, prose ("section X of title Y") |
+| Named-code | NY (21 laws), CA (29 codes), TX (29 codes), MD (36 articles), VA, AL, MA |
+| Abbreviated-code | FL, OH, MI, UT, CO, WA, NC, GA, PA, IN, NJ, DE |
+| Chapter-act | IL (ILCS) |
 
 ### Async API
 
@@ -434,7 +474,7 @@ Three entry points for optimal tree-shaking:
 
 | Entry Point | Import | Gzipped |
 |------------|--------|---------|
-| Core extraction | `eyecite-ts` | 7.0 KB |
+| Core extraction | `eyecite-ts` | ~10 KB |
 | Annotation | `eyecite-ts/annotate` | 0.7 KB |
 | Reporter data | `eyecite-ts/data` | 86.5 KB (lazy-loaded) |
 
@@ -469,7 +509,7 @@ pnpm lint            # Lint with Biome
 pnpm format          # Format with Biome
 ```
 
-527 tests across 22 test files.
+985+ tests across 32 test files.
 
 ## License
 
