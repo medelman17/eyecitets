@@ -264,4 +264,102 @@ describe('extractStatute', () => {
 			expect(citation.patternsChecked).toBe(1)
 		})
 	})
+
+	// --- NEW: Dispatcher and new field tests ---
+
+	describe('dispatch to family extractors', () => {
+		it('should dispatch usc patternId to federal extractor', () => {
+			const token: Token = {
+				text: '42 U.S.C. § 1983',
+				span: { cleanStart: 0, cleanEnd: 17 },
+				type: 'statute',
+				patternId: 'usc',
+			}
+			const citation = extractStatute(token, createIdentityMap())
+			expect(citation.jurisdiction).toBe('US')
+			expect(citation.title).toBe(42)
+			expect(citation.code).toBe('U.S.C.')
+			expect(citation.section).toBe('1983')
+		})
+
+		it('should dispatch cfr patternId to federal extractor', () => {
+			const token: Token = {
+				text: '40 C.F.R. § 122',
+				span: { cleanStart: 0, cleanEnd: 16 },
+				type: 'statute',
+				patternId: 'cfr',
+			}
+			const citation = extractStatute(token, createIdentityMap())
+			expect(citation.jurisdiction).toBe('US')
+			expect(citation.title).toBe(40)
+		})
+
+		it('should dispatch prose patternId to prose extractor', () => {
+			const token: Token = {
+				text: 'section 1983 of title 42',
+				span: { cleanStart: 0, cleanEnd: 24 },
+				type: 'statute',
+				patternId: 'prose',
+			}
+			const citation = extractStatute(token, createIdentityMap())
+			expect(citation.jurisdiction).toBe('US')
+			expect(citation.title).toBe(42)
+			expect(citation.section).toBe('1983')
+			expect(citation.code).toBe('U.S.C.')
+		})
+
+		it('should use legacy parsing for state-code patternId', () => {
+			const token: Token = {
+				text: 'Cal. Penal Code § 187',
+				span: { cleanStart: 0, cleanEnd: 21 },
+				type: 'statute',
+				patternId: 'state-code',
+			}
+			const citation = extractStatute(token, createIdentityMap())
+			expect(citation.code).toBe('Cal. Penal Code')
+			expect(citation.section).toBe('187')
+		})
+	})
+
+	describe('new fields via full pipeline', () => {
+		it('should extract subsection through full pipeline', () => {
+			const citations = extractCitations('42 U.S.C. § 1983(a)(1)')
+			expect(citations).toHaveLength(1)
+			const c = citations[0]
+			if (c.type === 'statute') {
+				expect(c.subsection).toBe('(a)(1)')
+				expect(c.pincite).toBe('(a)(1)')
+				expect(c.jurisdiction).toBe('US')
+			}
+		})
+
+		it('should extract et seq through full pipeline', () => {
+			const citations = extractCitations('42 U.S.C. § 1983 et seq.')
+			expect(citations).toHaveLength(1)
+			const c = citations[0]
+			if (c.type === 'statute') {
+				expect(c.hasEtSeq).toBe(true)
+			}
+		})
+
+		it('should extract prose citation through full pipeline', () => {
+			const citations = extractCitations('See section 1983 of title 42 for details.')
+			expect(citations).toHaveLength(1)
+			const c = citations[0]
+			if (c.type === 'statute') {
+				expect(c.title).toBe(42)
+				expect(c.section).toBe('1983')
+				expect(c.jurisdiction).toBe('US')
+			}
+		})
+
+		it('should still extract Cal. Penal Code § 187 via state-code pattern', () => {
+			const citations = extractCitations('Cal. Penal Code § 187')
+			expect(citations).toHaveLength(1)
+			if (citations[0].type === 'statute') {
+				expect(citations[0].code).toBe('Cal. Penal Code')
+				expect(citations[0].section).toBe('187')
+			}
+		})
+	})
 })
