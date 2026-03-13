@@ -7,25 +7,27 @@
  * Family dispatch:
  * - "usc", "cfr" → extractFederal
  * - "prose" → extractProse
- * - "state-code", unknown → legacy inline parser (backward compat)
+ * - "abbreviated-code" → extractAbbreviated
+ * - "chapter-act" → extractChapterAct
+ * - unknown → legacy inline parser (safety net for unknown patternIds)
  *
  * @module extract/extractStatute
  */
 
-import type { Token } from '@/tokenize'
-import type { StatuteCitation } from '@/types/citation'
-import type { TransformationMap } from '@/types/span'
-import { extractFederal } from './statutes/extractFederal'
-import { extractProse } from './statutes/extractProse'
+import type { Token } from "@/tokenize"
+import type { StatuteCitation } from "@/types/citation"
+import type { TransformationMap } from "@/types/span"
+import { extractAbbreviated } from "./statutes/extractAbbreviated"
+import { extractChapterAct } from "./statutes/extractChapterAct"
+import { extractFederal } from "./statutes/extractFederal"
+import { extractNamedCode } from "./statutes/extractNamedCode"
+import { extractProse } from "./statutes/extractProse"
 
 /**
- * Legacy inline parser for state-code and unknown patterns.
- * Preserved for backward compatibility until PR 2-3 add state extractors.
+ * Legacy inline parser for unknown patterns.
+ * Safety net for any patternId not explicitly handled by the dispatcher.
  */
-function extractLegacy(
-  token: Token,
-  transformationMap: TransformationMap,
-): StatuteCitation {
+function extractLegacy(token: Token, transformationMap: TransformationMap): StatuteCitation {
   const { text, span } = token
 
   const statuteRegex = /^(?:(\d+)\s+)?([A-Za-z.\s]+?)\s*§+\s*(\d+[A-Za-z0-9-]*)/
@@ -34,13 +36,11 @@ function extractLegacy(
   // Graceful fallback for unparseable tokens — return low-confidence citation
   // rather than throwing (spec: "Unknown codes produce citations with low confidence")
   if (!match) {
-    const originalStart =
-      transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
-    const originalEnd =
-      transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd
+    const originalStart = transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
+    const originalEnd = transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd
 
     return {
-      type: 'statute',
+      type: "statute",
       text,
       span: { cleanStart: span.cleanStart, cleanEnd: span.cleanEnd, originalStart, originalEnd },
       confidence: 0.3,
@@ -48,7 +48,7 @@ function extractLegacy(
       processTimeMs: 0,
       patternsChecked: 1,
       code: text,
-      section: '',
+      section: "",
     }
   }
 
@@ -56,19 +56,17 @@ function extractLegacy(
   const code = match[2].trim()
   const section = match[3]
 
-  const originalStart =
-    transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
-  const originalEnd =
-    transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd
+  const originalStart = transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
+  const originalEnd = transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd
 
   let confidence = 0.5
   const knownCodes = [
-    'U.S.C.',
-    'C.F.R.',
-    'Cal. Civ. Code',
-    'Cal. Penal Code',
-    'N.Y. Civ. Prac. L. & R.',
-    'Tex. Civ. Prac. & Rem. Code',
+    "U.S.C.",
+    "C.F.R.",
+    "Cal. Civ. Code",
+    "Cal. Penal Code",
+    "N.Y. Civ. Prac. L. & R.",
+    "Tex. Civ. Prac. & Rem. Code",
   ]
 
   if (knownCodes.some((c) => code.includes(c))) {
@@ -78,7 +76,7 @@ function extractLegacy(
   confidence = Math.min(confidence, 1.0)
 
   return {
-    type: 'statute',
+    type: "statute",
     text,
     span: {
       cleanStart: span.cleanStart,
@@ -105,13 +103,20 @@ export function extractStatute(
   transformationMap: TransformationMap,
 ): StatuteCitation {
   switch (token.patternId) {
-    case 'usc':
-    case 'cfr':
+    case "usc":
+    case "cfr":
       return extractFederal(token, transformationMap)
-    case 'prose':
+    case "prose":
       return extractProse(token, transformationMap)
+    case "abbreviated-code":
+      return extractAbbreviated(token, transformationMap)
+    case "named-code":
+    case "mass-chapter":
+      return extractNamedCode(token, transformationMap)
+    case "chapter-act":
+      return extractChapterAct(token, transformationMap)
     default:
-      // state-code and any unknown patterns use legacy parser
+      // unknown patterns use legacy parser
       return extractLegacy(token, transformationMap)
   }
 }

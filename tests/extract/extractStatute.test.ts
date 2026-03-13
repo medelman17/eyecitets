@@ -308,12 +308,12 @@ describe('extractStatute', () => {
 			expect(citation.code).toBe('U.S.C.')
 		})
 
-		it('should use legacy parsing for state-code patternId', () => {
+		it('should use legacy parsing for unknown patternId', () => {
 			const token: Token = {
 				text: 'Cal. Penal Code § 187',
 				span: { cleanStart: 0, cleanEnd: 21 },
 				type: 'statute',
-				patternId: 'state-code',
+				patternId: 'unknown-pattern',
 			}
 			const citation = extractStatute(token, createIdentityMap())
 			expect(citation.code).toBe('Cal. Penal Code')
@@ -362,12 +362,14 @@ describe('extractStatute', () => {
 			}
 		})
 
-		it('should still extract Cal. Penal Code § 187 via state-code pattern', () => {
+		it('should extract Cal. Penal Code § 187 via named-code pattern', () => {
 			const citations = extractCitations('Cal. Penal Code § 187')
 			expect(citations).toHaveLength(1)
 			if (citations[0].type === 'statute') {
-				expect(citations[0].code).toBe('Cal. Penal Code')
+				// named-code pattern now fires before state-code; code stores cleaned name
+				expect(citations[0].code).toBe('Penal')
 				expect(citations[0].section).toBe('187')
+				expect(citations[0].jurisdiction).toBe('CA')
 			}
 		})
 	})

@@ -76,8 +76,128 @@
   {
     "text": "Cal. Penal Code § 187",
     "expected": [
-      { "type": "statute", "code": "Cal. Penal Code", "section": "187" }
+      { "type": "statute", "code": "Penal", "section": "187", "jurisdiction": "CA" }
     ],
-    "note": "State citation — backward compat via legacy parser"
+    "note": "State citation — routed to named-code extractor; code stores cleaned name"
+  },
+  {
+    "text": "Fla. Stat. § 768.81(1)(a)",
+    "expected": [
+      { "type": "statute", "code": "Fla. Stat.", "section": "768.81", "subsection": "(1)(a)", "jurisdiction": "FL" }
+    ]
+  },
+  {
+    "text": "R.C. 2305.01",
+    "expected": [
+      { "type": "statute", "code": "R.C.", "section": "2305.01", "jurisdiction": "OH" }
+    ]
+  },
+  {
+    "text": "MCL 750.81 et seq.",
+    "expected": [
+      { "type": "statute", "code": "MCL", "section": "750.81", "hasEtSeq": true, "jurisdiction": "MI" }
+    ]
+  },
+  {
+    "text": "Utah Code § 76-5-302",
+    "expected": [
+      { "type": "statute", "code": "Utah Code", "section": "76-5-302", "jurisdiction": "UT" }
+    ]
+  },
+  {
+    "text": "C.R.S. § 13-1-101",
+    "expected": [
+      { "type": "statute", "code": "C.R.S.", "section": "13-1-101", "jurisdiction": "CO" }
+    ]
+  },
+  {
+    "text": "RCW 26.09.191",
+    "expected": [
+      { "type": "statute", "code": "RCW", "section": "26.09.191", "jurisdiction": "WA" }
+    ]
+  },
+  {
+    "text": "G.S. 20-138.1",
+    "expected": [
+      { "type": "statute", "code": "G.S.", "section": "20-138.1", "jurisdiction": "NC" }
+    ]
+  },
+  {
+    "text": "O.C.G.A. § 16-5-1",
+    "expected": [
+      { "type": "statute", "code": "O.C.G.A.", "section": "16-5-1", "jurisdiction": "GA" }
+    ]
+  },
+  {
+    "text": "42 Pa.C.S. § 5524",
+    "expected": [
+      { "type": "statute", "code": "Pa.C.S.", "title": 42, "section": "5524", "jurisdiction": "PA" }
+    ]
+  },
+  {
+    "text": "Ind. Code § 35-42-1-1",
+    "expected": [
+      { "type": "statute", "code": "Ind. Code", "section": "35-42-1-1", "jurisdiction": "IN" }
+    ]
+  },
+  {
+    "text": "N.J.S.A. 2A:10-1",
+    "expected": [
+      { "type": "statute", "code": "N.J.S.A.", "section": "2A:10-1", "jurisdiction": "NJ" }
+    ]
+  },
+  {
+    "text": "8 Del. C. § 141",
+    "expected": [
+      { "type": "statute", "code": "Del. C.", "title": 8, "section": "141", "jurisdiction": "DE" }
+    ]
+  },
+  {
+    "text": "N.Y. Penal Law § 125.25(1)(a)",
+    "expected": [
+      { "type": "statute", "code": "Penal Law", "section": "125.25", "subsection": "(1)(a)", "jurisdiction": "NY" }
+    ]
+  },
+  {
+    "text": "Tex. Fam. Code § 1.01",
+    "expected": [
+      { "type": "statute", "section": "1.01", "jurisdiction": "TX" }
+    ]
+  },
+  {
+    "text": "735 ILCS 5/2-1001",
+    "expected": [
+      { "type": "statute", "title": 735, "code": "5", "section": "2-1001", "jurisdiction": "IL" }
+    ]
+  },
+  {
+    "text": "720 ILCS 5/12-3.05(a)",
+    "expected": [
+      { "type": "statute", "title": 720, "section": "12-3.05", "subsection": "(a)", "jurisdiction": "IL" }
+    ]
+  },
+  {
+    "text": "Md. Code Ann., Crim. Law § 3-202",
+    "expected": [
+      { "type": "statute", "section": "3-202", "jurisdiction": "MD" }
+    ]
+  },
+  {
+    "text": "Va. Code § 8.01-243",
+    "expected": [
+      { "type": "statute", "section": "8.01-243", "jurisdiction": "VA" }
+    ]
+  },
+  {
+    "text": "Ala. Code § 13A-6-61",
+    "expected": [
+      { "type": "statute", "section": "13A-6-61", "jurisdiction": "AL" }
+    ]
+  },
+  {
+    "text": "Mass. Gen. Laws ch. 93A, § 2",
+    "expected": [
+      { "type": "statute", "code": "93A", "section": "2", "jurisdiction": "MA" }
+    ]
   }
 ]
