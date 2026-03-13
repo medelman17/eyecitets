@@ -40,8 +40,9 @@ export function extractChapterAct(
   const originalStart = transformationMap.cleanToOriginal.get(span.cleanStart) ?? span.cleanStart
   const originalEnd = transformationMap.cleanToOriginal.get(span.cleanEnd) ?? span.cleanEnd
 
+  // Title (chapter) is always present on a successful ILCS match — no bonus needed.
+  // Only subsection presence provides a confidence boost.
   let confidence = match ? 0.95 : 0.3
-  if (title !== undefined) confidence += 0.05
   if (subsection) confidence += 0.05
   confidence = Math.min(confidence, 1.0)
 
